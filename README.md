@@ -6,20 +6,8 @@
     <img alt="GOLD-MD" height="400" src="https://i.postimg.cc/7LWBgYMq/bilal.jpg">
   </a>
 </p>
-<a><img src='https://i.imgur.com/LyHic3i.gif'/></a>
 
-# *_JUST • [FORK](https://github.com/BilalTech05/BILAL-MD/fork) • THE REPO_*
-
-<a><img src='https://i.imgur.com/LyHic3i.gif'/></a>
-
-# *_GET • [SESSION ID](https://pair-vd1s.onrender.com/) • FOR BILAL-MD_*
-
-<a><img src='https://i.imgur.com/LyHic3i.gif'/></a>
-
-# *_NOW • [DEPLOY](https://dashboard.heroku.com/new?button-url=https://github.com/D4X-UMAR/GOLD-MD&template=https://github.com/BilalTech05/BILAL-MD) • BILAL-MD ON HEROKU_*
-
-<a><img src='https://i.imgur.com/LyHic3i.gif'/></a>
-
+<a><img src='https://i.imgur.com/LyHic3i.gif'/><
 # *_FOLLOW • [WHATSAPP CHANNEL](https://whatsapp.com/channel/0029Vaj3Xnu17EmtDxTNnQ0G) •_*
 
 <a><img src='https://i.imgur.com/LyHic3i.gif'/></a>
