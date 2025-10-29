@@ -9,78 +9,89 @@ const STATE_PATH = path.join(__dirname, "../data/bgm.json");
 // Load or create BGM state
 let bgmState = { enabled: true, name: "" };
 if (fs.existsSync(STATE_PATH)) {
-    try {
-        bgmState = JSON.parse(fs.readFileSync(STATE_PATH, "utf-8"));
-    } catch (e) {
-        console.error("❌ ERROR reading bgm.json:", e.message);
-    }
+  try {
+    bgmState = JSON.parse(fs.readFileSync(STATE_PATH, "utf-8"));
+  } catch (e) {
+    console.error("❌ ERROR reading bgm.json:", e.message);
+  }
 } else {
-    fs.writeFileSync(STATE_PATH, JSON.stringify(bgmState));
+  fs.writeFileSync(STATE_PATH, JSON.stringify(bgmState));
 }
 
-// Command to toggle ON/OFF or set BGM name manually
+// =======================================
+// 🔊 BGM TOGGLE / SET COMMAND
+// =======================================
 cmd({
-    pattern: "bgm",
-    fromMe: false, // Owner can also set if you want
-    desc: "Set background music ON/OFF or manually set BGM name"
-}, async (m, { args }) => {
-    try {
-        const sender = m.key.remoteJid.split("@")[0];
-        const OWNER_NUMBER = process.env.OWNER_NUMBER || config.OWNER_NUMBER || "923276650623";
-        if (sender !== OWNER_NUMBER) return; // Only owner can toggle or set
+  pattern: "bgm",
+  desc: "Set background music ON/OFF or manually set BGM name",
+  category: "settings",
+  react: "🎶",
+  filename: __filename
+},
+async (conn, mek, m, { from, args, reply }) => {
+  try {
+    const sender = from.split("@")[0];
+    const OWNER_NUMBER = config.OWNER_NUMBER || "923276650623";
 
-        if (!args[0]) {
-            // Toggle default
-            bgmState.enabled = !bgmState.enabled;
-            fs.writeFileSync(STATE_PATH, JSON.stringify(bgmState));
-            return m.reply(`✅ BGM is now *${bgmState.enabled ? "ON" : "OFF"}*`);
-        }
+    if (!OWNER_NUMBER.includes(sender))
+      return reply("❌ Only owner can use this command!");
 
-        const cmdArg = args[0].toLowerCase();
-        if (cmdArg === "on") {
-            bgmState.enabled = true;
-            fs.writeFileSync(STATE_PATH, JSON.stringify(bgmState));
-            return m.reply("✅ BGM turned ON");
-        }
-        if (cmdArg === "off") {
-            bgmState.enabled = false;
-            fs.writeFileSync(STATE_PATH, JSON.stringify(bgmState));
-            return m.reply("✅ BGM turned OFF");
-        }
-
-        if (cmdArg === "set" && args[1]) {
-            bgmState.name = args.slice(1).join(" ");
-            fs.writeFileSync(STATE_PATH, JSON.stringify(bgmState));
-            return m.reply(`✅ BGM set to name: ${bgmState.name}`);
-        }
-
-    } catch (e) {
-        console.error("❌ ERROR in BGM command:", e);
-        await m.reply("⚠️ Something went wrong!");
+    if (!args[0]) {
+      // Toggle
+      bgmState.enabled = !bgmState.enabled;
+      fs.writeFileSync(STATE_PATH, JSON.stringify(bgmState));
+      return reply(`✅ BGM is now *${bgmState.enabled ? "ON" : "OFF"}*`);
     }
+
+    const cmdArg = args[0].toLowerCase();
+
+    if (cmdArg === "on") {
+      bgmState.enabled = true;
+      fs.writeFileSync(STATE_PATH, JSON.stringify(bgmState));
+      return reply("✅ BGM turned ON");
+    }
+
+    if (cmdArg === "off") {
+      bgmState.enabled = false;
+      fs.writeFileSync(STATE_PATH, JSON.stringify(bgmState));
+      return reply("✅ BGM turned OFF");
+    }
+
+    if (cmdArg === "set" && args[1]) {
+      bgmState.name = args.slice(1).join(" ");
+      fs.writeFileSync(STATE_PATH, JSON.stringify(bgmState));
+      return reply(`✅ BGM name set to: *${bgmState.name}*`);
+    }
+
+    return reply("⚙️ Usage:\n.bgm on\n.bgm off\n.bgm set <name>");
+
+  } catch (e) {
+    console.error("❌ ERROR in BGM command:", e);
+    reply("⚠️ Something went wrong!");
+  }
 });
 
-// BGM handler: reply with voice to set
-cmd({ on: "voice" }, async (conn, mek, m) => {
-    try {
-        if (!bgmState.enabled) return;
-        if (!m.quoted?.audio && !m.quoted?.ptt) return; // Only reply to audio/voice
+// =======================================
+// 🎵 BGM HANDLER — SAVE QUOTED VOICE
+// =======================================
+cmd({ on: "quoted" }, async (conn, mek, m) => {
+  try {
+    if (!bgmState.enabled) return;
 
-        // Extract quoted audio
-        const audioMsg = m.quoted;
-        const audioBuffer = await conn.downloadMediaMessage(audioMsg);
+    if (!m.quoted?.mtype?.includes("audioMessage")) return;
 
-        if (!audioBuffer) return m.reply("❌ Unable to fetch audio from quoted message");
+    const audioBuffer = await conn.downloadMediaMessage(m.quoted);
 
-        // Save to tmp folder
-        const fileName = (bgmState.name || Date.now()) + ".mp3";
-        const filePath = path.join(__dirname, "../tmp", fileName);
-        fs.writeFileSync(filePath, audioBuffer);
+    if (!audioBuffer) return m.reply("❌ Could not fetch quoted audio.");
 
-        await m.reply(`✅ BGM saved as "${bgmState.name || fileName}"`);
+    const fileName = (bgmState.name || Date.now()) + ".mp3";
+    const filePath = path.join(__dirname, "../tmp", fileName);
 
-    } catch (e) {
-        console.error("❌ BGM handler error:", e);
-        await m.reply("⚠️ Something went wrong while setting BGM");
-    }
+    fs.writeFileSync(filePath, audioBuffer);
+    await m.reply(`✅ BGM saved as *${bgmState.name || fileName}*`);
+
+  } catch (e) {
+    console.error("❌ BGM handler error:", e);
+    await m.reply("⚠️ Something went wrong while saving BGM");
+  }
 });
