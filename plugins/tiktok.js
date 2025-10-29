@@ -4,66 +4,93 @@ const axios = require('axios');
 cmd({
     pattern: "tiktok",
     alias: ["ttdl", "tt", "tiktokdl"],
-    desc: "Download TikTok video without watermark",
+    desc: "Download TikTok video without watermark (multi-fallback)",
     category: "downloader",
     react: "🎵",
     filename: __filename
 },
-async (conn, mek, m, { from, args, q, reply }) => {
+async (conn, mek, m, { from, q, reply }) => {
     let waitMsg;
     try {
-        // React 🥺
         await conn.sendMessage(from, { react: { text: "🥺", key: mek.key } });
 
-        // Agar user ne link nahi diya
-        if (!q) {
-            return reply(
-                `*AGAR AP NE TIKTOK KI VIDEO DOWNLOAD KARNI HAI 🥺💓* \n\n` +
-                `*TO AP ESE LIKHO 😇♥️* \n\n` +
-                `> *TIKTOK <APKI TIKTOK VIDEO KA LINK>* \n\n` +
-                `*EXAMPLE:* \n.tiktok https://www.tiktok.com/@username/video/1234567890`
-            );
-        }
+        if (!q) return reply(
+            "*❌ Please provide a TikTok video link!*\n\nExample:\n```.tiktok https://www.tiktok.com/@username/video/123456789```"
+        );
 
-        // Agar galat link diya gaya hai
         if (!q.includes("tiktok.com")) {
             await conn.sendMessage(from, { react: { text: "😔", key: mek.key } });
-            return reply("*DUBARA KOSHISH KARE 🥺 — VALID TikTok LINK DEEJIYE!*");
+            return reply("*⚠️ Invalid TikTok link! Please check and try again.*");
         }
 
-        // Wait message bhejna
-        waitMsg = await conn.sendMessage(from, { text: "*APKI TIKTOK VIDEO DOWNLOAD HO RAHI HAI ☺️*\n*KUCH DER INTEZAR KARE 🥰*" });
+        waitMsg = await conn.sendMessage(from, { text: "*📥 Downloading your TikTok video... Please wait 😇*" });
 
-        // API CALL — working endpoint
-        const apiUrl = `https://api.tiklydown.eu.org/api/download?url=${encodeURIComponent(q)}`;
-        const { data } = await axios.get(apiUrl);
+        let videoUrl;
 
-        if (!data || !data.video || !data.video.noWatermark) {
+        // ========== 1️⃣ Primary API ==========
+        try {
+            const api1 = `https://delirius-apiofc.vercel.app/download/tiktok?url=${q}`;
+            const { data } = await axios.get(api1);
+            if (data?.status && data?.data?.meta?.media) {
+                videoUrl = data.data.meta.media.find(v => v.type === "video")?.org;
+                console.log("✅ Source: Delirius API");
+            }
+        } catch (err) {
+            console.log("❌ Delirius API failed:", err.message);
+        }
+
+        // ========== 2️⃣ Fallback API ==========
+        if (!videoUrl) {
+            try {
+                const api2 = `https://itzpire.com/download/tiktok?url=${q}`;
+                const { data } = await axios.get(api2);
+                if (data?.data?.play) {
+                    videoUrl = data.data.play;
+                    console.log("✅ Source: ItzPire API");
+                } else if (data?.result?.video) {
+                    videoUrl = data.result.video;
+                    console.log("✅ Source: ItzPire API (alt key)");
+                }
+            } catch (err) {
+                console.log("❌ ItzPire API failed:", err.message);
+            }
+        }
+
+        // ========== 3️⃣ Last Fallback (Lance France) ==========
+        if (!videoUrl) {
+            try {
+                const api3 = `https://lance-frank-asta.onrender.com/api/downloader?url=${q}`;
+                const { data } = await axios.get(api3);
+                if (data?.result?.video || data?.video?.url || data?.url) {
+                    videoUrl = data.result?.video || data.video?.url || data.url;
+                    console.log("✅ Source: Lance France API");
+                }
+            } catch (err) {
+                console.log("❌ Lance France API failed:", err.message);
+            }
+        }
+
+        // If all fail
+        if (!videoUrl) {
             if (waitMsg) await conn.sendMessage(from, { delete: waitMsg.key });
             await conn.sendMessage(from, { react: { text: "😔", key: mek.key } });
-            return reply("*❌ DOWNLOAD FAIL — DUBARA KOSHISH KARE 🥺*");
+            return reply("⚠️ TikTok download temporarily unavailable.\nPlease try again later 🥺");
         }
 
-        const videoUrl = data.video.noWatermark;
-        const caption = "*👑 BY :❯ BILAL-MD 👑*";
-
-        // Send video
+        // Send video finally 🎬
         await conn.sendMessage(from, {
             video: { url: videoUrl },
-            caption,
+            caption: "*👑 BY: BILAL-MD 👑*",
             contextInfo: { mentionedJid: [m.sender] }
         }, { quoted: mek });
 
-        // Delete wait msg
         if (waitMsg) await conn.sendMessage(from, { delete: waitMsg.key });
-
-        // Success react
         await conn.sendMessage(from, { react: { text: "☺️", key: mek.key } });
 
     } catch (e) {
-        console.error("❌ TikTok command error:", e);
+        console.error("TikTok command error:", e);
         if (waitMsg) await conn.sendMessage(from, { delete: waitMsg.key });
         await conn.sendMessage(from, { react: { text: "😔", key: mek.key } });
-        reply("*❌ ERROR: DUBARA KOSHISH KARE 🥺*");
+        reply("*⚠️ Something went wrong. Please try again later 🥺*");
     }
 });
