@@ -3,27 +3,29 @@ const axios = require('axios');
 
 cmd({
     pattern: "ai",
-    alias: ["gpt", "chatgpt", "askai"],
-    desc: "Ask any question from AI",
+    alias: ["bot", "white", "gpt", "gpt4", "bing"],
+    desc: "Chat with an AI model",
     category: "ai",
     react: "🤖",
     filename: __filename
 },
-async (conn, mek, m, { from, args, q, reply }) => {
+async (conn, mek, m, { from, args, q, reply, react }) => {
     try {
-        if (!q) return reply("💬 *Please enter a question to ask the AI.*\n\nExample: `.ai What is JavaScript?`");
+        if (!q) return reply("💬 Please provide a message for the AI.\nExample: `.ai What is JavaScript?`");
 
-        let wait = await reply("🧠 Thinking...");
-        const response = await axios.get(`https://lance-frank-asta.onrender.com/api/ai?q=${encodeURIComponent(q)}`);
+        const apiUrl = `https://lance-frank-asta.onrender.com/api/ai?q=${encodeURIComponent(q)}`;
+        const { data } = await axios.get(apiUrl);
 
-        if (response.data && response.data.result) {
-            await conn.sendMessage(from, { text: `🤖 *AI Reply:*\n\n${response.data.result}` }, { quoted: mek });
-        } else {
-            await conn.sendMessage(from, { text: "⚠️ AI didn’t return a valid response. Try again later." }, { quoted: mek });
+        if (!data || !data.result) {
+            await react("❌");
+            return reply("⚠️ AI failed to respond. Please try again later.");
         }
 
+        await reply(`🤖 *BILAL-MD AI Response:*\n\n${data.result}`);
+        await react("✅");
     } catch (e) {
-        console.error(e);
-        reply("❌ *Error:* Unable to connect to AI API.\nCheck your internet or API link.");
+        console.error("Error in AI command:", e);
+        await react("❌");
+        reply("❌ Error occurred while communicating with the AI API.");
     }
 });
