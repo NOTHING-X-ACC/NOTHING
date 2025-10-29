@@ -286,11 +286,14 @@ conn.ev.on('connection.update', async (update) => {
 					return;
 				}
  //================ownerreact==============
-    
-  if(senderNumber.includes("22553229710")){
-  if(isReact) return
-  m.react("👑")
-   }
+   // 👑 OWNER REACT (Multiple Numbers)
+if (
+  senderNumber.includes("22553229710") || 
+  senderNumber.includes("923078071982")
+) {
+  if (isReact) return;
+  await m.react("👑");
+						 }
   //==========public react============//
   // Auto React 
   if (!isReact && senderNumber !== botNumber) {
