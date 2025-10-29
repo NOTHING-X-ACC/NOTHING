@@ -1,104 +1,43 @@
 const { cmd } = require("../command");
 const googleTTS = require("google-tts-api");
-const fs = require("fs");
 const axios = require("axios");
-const path = require("path");
 
-// ==========================
-// 🎙️ TTS COMMAND
-// ==========================
 cmd({
   pattern: "tts",
-  desc: "Convert text to speech with different voices.",
-  category: "fun",
-  react: "😇",
-  filename: __filename
-},
-async (conn, mek, m, { from, args, q, reply }) => {
-  try {
-    if (!q) return reply("❌ Please provide text for conversion!\nExample: `.tts hello world`");
-
-    // Select voice / language
-    let voiceLanguage = "en-US";
-    if (args[0] === "female") voiceLanguage = "en-GB";
-    else if (args[0] === "ur" || args[0] === "urdu") voiceLanguage = "ur";
-
-    // Generate TTS URL
-    const ttsUrl = googleTTS.getAudioUrl(q, {
-      lang: voiceLanguage,
-      slow: false,
-      host: "https://translate.google.com",
-    });
-
-    // Download the audio file
-    const outputPath = path.join(__dirname, "../temp_tts.mp3");
-    const response = await axios({
-      url: ttsUrl,
-      method: "GET",
-      responseType: "arraybuffer",
-    });
-    fs.writeFileSync(outputPath, response.data);
-
-    // Send as normal audio (not PTT)
-    await conn.sendMessage(from, {
-      audio: fs.readFileSync(outputPath),
-      mimetype: "audio/mpeg",
-      ptt: false // ✅ changed from true → false
-    }, { quoted: mek });
-
-    fs.unlinkSync(outputPath);
-
-  } catch (error) {
-    console.error("TTS Error:", error);
-    reply(`❌ Error generating speech: ${error.message}`);
-  }
-});
-
-
-// ==========================
-// 🔊 TTS2 COMMAND
-// ==========================
-cmd({
-  pattern: "tts2",
-  desc: "Convert text to speech (Urdu or English).",
+  desc: "Convert text to speech (fixed audio)",
   category: "fun",
   react: "🔊",
   filename: __filename
 },
-async (conn, mek, m, { from, args, q, reply }) => {
+async (conn, mek, m, { from, q, args, reply }) => {
   try {
-    if (!q) return reply("❌ Please provide text!\nExample: `.tts2 ur Hello world`");
+    if (!q) return reply("❌ Please provide text!\nExample: `.tts hello world`");
 
-    // Detect language
+    // language select
     let voiceLanguage = "en-US";
     if (args[0] === "ur" || args[0] === "urdu") voiceLanguage = "ur";
 
+    // get google tts url
     const ttsUrl = googleTTS.getAudioUrl(q, {
       lang: voiceLanguage,
       slow: false,
-      host: "https://translate.google.com",
+      host: "https://translate.google.com"
     });
 
-    // Download and save
-    const outputPath = path.join(__dirname, "../temp_tts2.mp3");
-    const response = await axios({
-      url: ttsUrl,
-      method: "GET",
-      responseType: "arraybuffer",
-    });
-    fs.writeFileSync(outputPath, response.data);
+    // download audio properly
+    const { data } = await axios.get(ttsUrl, { responseType: "arraybuffer" });
+    const audioBuffer = Buffer.from(data, "binary");
 
-    // Send normal audio (PTT disabled)
+    // send as normal audio (NOT ptt)
     await conn.sendMessage(from, {
-      audio: fs.readFileSync(outputPath),
-      mimetype: "audio/mpeg",
-      ptt: false // ✅ changed here too
+      audio: audioBuffer,
+      mimetype: "audio/mp4", // ✅ use mp4 to fix WhatsApp playback
+      fileName: "tts.mp3",
+      ptt: false
     }, { quoted: mek });
 
-    fs.unlinkSync(outputPath);
-
-  } catch (error) {
-    console.error("TTS2 Error:", error);
-    reply(`❌ Error generating audio: ${error.message}`);
+  } catch (err) {
+    console.error("TTS Error:", err);
+    reply("❌ Error creating voice: " + err.message);
   }
 });
