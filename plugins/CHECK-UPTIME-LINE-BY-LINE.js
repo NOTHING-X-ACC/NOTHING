@@ -16,7 +16,7 @@ cmd({
 
     // ⏱️ Initial waiting message
     const msg = await conn.sendMessage(from, {
-      text: `*UPTIME CHECK HO RAHA HAI...🥰*`
+      text: `*UPTIME CHECK HO RAHA HAI...☺️*`
     }, { quoted: mek });
 
     // 🔁 30 minutes = 1800 updates (1 per second)
