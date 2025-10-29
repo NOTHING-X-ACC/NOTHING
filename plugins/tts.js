@@ -6,7 +6,7 @@ cmd({
   pattern: "tts",
   desc: "Convert text to speech (fixed audio)",
   category: "fun",
-  react: "🔊",
+  react: "☺️",
   filename: __filename
 },
 async (conn, mek, m, { from, q, args, reply }) => {
