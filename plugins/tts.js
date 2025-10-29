@@ -11,7 +11,7 @@ cmd({
 },
 async (conn, mek, m, { from, q, args, reply }) => {
   try {
-    if (!q) return reply("❌ Please provide text!\nExample: `.tts hello world`");
+    if (!q) return reply("AP NE MSG KI VOICE BANANI HAI 🤔* \n *TO AP ESE LIKHO ☺️* \n\n *TTS ❮APKA MSG❯* \n\n *JAB AP ESE LIKHO GE 😇 TO APKA WO MSG VOICE BAN JAYE GA 🥰❤️*");
 
     // language select
     let voiceLanguage = "en-US";
