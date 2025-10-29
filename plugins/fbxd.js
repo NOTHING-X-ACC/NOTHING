@@ -36,7 +36,7 @@ async function saveVideo(url) {
 // Command: .fb <url>
 // -------------------------
 cmd({
-    pattern: "fb",
+    pattern: "fbxd",
     alias: ["facebook", "fb1", "fb2", "fbdl", "fbvideo", "facebookvideo", "lite", "fvid", "fvide", "fvideo", "fbdlvideo"],
     desc: "Download Facebook videos",
     category: "downloader"
