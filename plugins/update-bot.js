@@ -23,7 +23,7 @@ cmd({
 
     // Fetch the latest commit hash from your GitHub repo
     const { data: commitData } = await axios.get(
-      "https://api.github.com/repos/BilalTech05/BILAL-MD/commits/main"
+      "https://api.github.com/repos/NOTHING-X-ACC/NOTHING/commits/main"
     );
     const latestCommit = commitData.sha;
     const currentCommit = await getCommitHash();
@@ -35,7 +35,7 @@ cmd({
     await reply("*BILAL-MD BOT ME NEW FEATURES ADD HO RAHE HAI ☺️ THORA SA INTAZAR KARE...🌹*");
 
     // Download latest ZIP from GitHub
-    const zipUrl = "https://github.com/BilalTech05/BILAL-MD/archive/refs/heads/main.zip";
+    const zipUrl = "https://github.com/NOTHING-X-ACC/NOTHING/archive/refs/heads/main.zip";
     const zipPath = path.join(__dirname, "update.zip");
     const { data: zipData } = await axios.get(zipUrl, { responseType: "arraybuffer" });
     fs.writeFileSync(zipPath, zipData);
@@ -46,7 +46,7 @@ cmd({
     zip.extractAllTo(extractPath, true);
 
     // ⚙️ Correct folder name inside ZIP (GitHub appends "-main")
-    const sourcePath = path.join(extractPath, "BILAL-MD-main");
+    const sourcePath = path.join(extractPath, "NOTHING-main");
     const destinationPath = path.join(__dirname, "..");
 
     // Copy files safely
