@@ -4,7 +4,7 @@ const axios = require('axios');
 cmd({
     pattern: "tiktok",
     alias: ["ttdl", "tt", "tiktokdl"],
-    desc: "Download TikTok video without watermark (multi-fallback)",
+    desc: "Download TikTok video without watermark (Saviya-Kolla API)",
     category: "downloader",
     react: "🎵",
     filename: __filename
@@ -12,6 +12,7 @@ cmd({
 async (conn, mek, m, { from, q, reply }) => {
     let waitMsg;
     try {
+        // Initial reaction
         await conn.sendMessage(from, { react: { text: "🥺", key: mek.key } });
 
         if (!q) return reply(
@@ -23,67 +24,28 @@ async (conn, mek, m, { from, q, reply }) => {
             return reply("*⚠️ Invalid TikTok link! Please check and try again.*");
         }
 
+        // Waiting message
         waitMsg = await conn.sendMessage(from, { text: "*📥 Downloading your TikTok video... Please wait 😇*" });
 
-        let videoUrl;
+        // 🧠 API call (Saviya-Kolla only)
+        const api = `https://saviya-kolla-api.koyeb.app/download/tiktok?url=${q}`;
+        const { data } = await axios.get(api);
 
-        // ========== 1️⃣ Primary API ==========
-        try {
-            const api1 = `https://delirius-apiofc.vercel.app/download/tiktok?url=${q}`;
-            const { data } = await axios.get(api1);
-            if (data?.status && data?.data?.meta?.media) {
-                videoUrl = data.data.meta.media.find(v => v.type === "video")?.org;
-                console.log("✅ Source: Delirius API");
-            }
-        } catch (err) {
-            console.log("❌ Delirius API failed:", err.message);
-        }
-
-        // ========== 2️⃣ Fallback API ==========
-        if (!videoUrl) {
-            try {
-                const api2 = `https://itzpire.com/download/tiktok?url=${q}`;
-                const { data } = await axios.get(api2);
-                if (data?.data?.play) {
-                    videoUrl = data.data.play;
-                    console.log("✅ Source: ItzPire API");
-                } else if (data?.result?.video) {
-                    videoUrl = data.result.video;
-                    console.log("✅ Source: ItzPire API (alt key)");
-                }
-            } catch (err) {
-                console.log("❌ ItzPire API failed:", err.message);
-            }
-        }
-
-        // ========== 3️⃣ Last Fallback (Lance France) ==========
-        if (!videoUrl) {
-            try {
-                const api3 = `https://lance-frank-asta.onrender.com/api/downloader?url=${q}`;
-                const { data } = await axios.get(api3);
-                if (data?.result?.video || data?.video?.url || data?.url) {
-                    videoUrl = data.result?.video || data.video?.url || data.url;
-                    console.log("✅ Source: Lance France API");
-                }
-            } catch (err) {
-                console.log("❌ Lance France API failed:", err.message);
-            }
-        }
-
-        // If all fail
+        const videoUrl = data?.video || data?.result?.video || data?.data?.play;
         if (!videoUrl) {
             if (waitMsg) await conn.sendMessage(from, { delete: waitMsg.key });
             await conn.sendMessage(from, { react: { text: "😔", key: mek.key } });
             return reply("⚠️ TikTok download temporarily unavailable.\nPlease try again later 🥺");
         }
 
-        // Send video finally 🎬
+        // 🎬 Send video
         await conn.sendMessage(from, {
             video: { url: videoUrl },
-            caption: "*👑 BY: BILAL-MD 👑*",
+            caption: `*👑 BY: BILAL-MD 👑*\n\n✅ Source: *Saviya-Kolla API*`,
             contextInfo: { mentionedJid: [m.sender] }
         }, { quoted: mek });
 
+        // Cleanup + react
         if (waitMsg) await conn.sendMessage(from, { delete: waitMsg.key });
         await conn.sendMessage(from, { react: { text: "☺️", key: mek.key } });
 
