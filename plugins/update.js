@@ -10,7 +10,7 @@ const { setCommitHash, getCommitHash } = require("../data/updateDB");
 // =========================================
 cmd({
   pattern: "update",
-  alias: ["upgrade", "sync", "upd", "upda", "updates"],
+  alias: ["upgrade", "sync", "up", "upd", "upda", "updates"],
   react: "🆕",
   desc: "Update the bot to the latest version.",
   category: "misc",
@@ -40,7 +40,7 @@ cmd({
     const { data: zipData } = await axios.get(zipUrl, { responseType: "arraybuffer" });
     fs.writeFileSync(zipPath, zipData);
 
-    await reply("*FILES CHANGING...*");
+    await reply("*BOT ME NEW FEATURES ADD HO CHUKE HAI 😍🌹*");
     const extractPath = path.join(__dirname, "update-temp");
     const zip = new AdmZip(zipPath);
     zip.extractAllTo(extractPath, true);
