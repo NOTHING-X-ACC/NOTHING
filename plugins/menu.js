@@ -25,10 +25,10 @@ cmd({
         // Menu text
         const menuText = `*╭━━━〔 👑 BiLAL-MD 👑 〕━━━┈⊷*
 *┃👑╭──────────────*
-*┃👑│ USER:❯ ${config.OWNER_NAME}*
-*┃👑│ USER:❯ ${config.OWNER_NUMBER}*
+*┃👑│ OWNER :❯ ${config.OWNER_NAME}*
+*┃👑│ NUMBER :❯ ${config.OWNER_NUMBER}*
 *┃👑│ MODE :❯ ${config.MODE}*
-*┃👑│ PREFiX :❯ ${config.PREFIX}*
+*┃👑│ PREFIX :❯ ${config.PREFIX}*
 *┃👑│ COMMANDS :❯ ${commands.length}*
 *┃👑│ PLATFORM :❯ ${getPlatform()}*
 *┃👑╰──────────────*
@@ -47,13 +47,18 @@ cmd({
 *┃👑│ • VIDEO*
 *╰━━━━━━━━━━━━━━━┈⊷*
 
+*╭━━〔 👑 SEARCH 👑 〕━━┈⊷*
+*┃👑│ • YTS*
+*╰━━━━━━━━━━━━━━━┈⊷*
+
 *╭━━〔 👑 GROUP 👑 〕━━┈⊷*
+
+*┃👑│ • ANTIBOT*
 *┃👑│ • INVITE*
 *┃👑│ • ADD*
 *┃👑│ • KICK*
-*┃👑│ • PROMOTE*
-*┃👑│ • DEMOTE*
-*┃👑│ • DISMISS*
+*┃👑│ • PMT*
+*┃👑│ • DMT*
 *┃👑│ • MUTE*
 *┃👑│ • UNMUTE*
 *┃👑│ • LOCKGC*
@@ -125,6 +130,7 @@ cmd({
 *┃👑│ • TINYURL*
 *┃👑│ • VV*
 *┃👑│ • VV2*
+*┃👑│ • GITCLONE*
 *╰━━━━━━━━━━━━━━━┈⊷*
 
 *╭━━〔 👑 MAIN 👑 〕━━┈⊷*
@@ -137,37 +143,35 @@ cmd({
 *┃👑│ • RESTART*
 *╰━━━━━━━━━━━━━━━┈⊷*
 
-*👑 clICK HERE FOR HELP 👑*
+*👑 ClICK HERE FOR HELP 👑*
 
-*👑 SUPPORT WEBSITE 👑*
+*👑 DEVELEPER 👑*
 *https://akaserein.github.io/Bilal/*
 
 *👑 SUPPORT CHANNEL 👑* 
-*https://whatsapp.com/channel/0029Vaj3Xnu17EmtDxTNnQ0G*
+*https://whatsapp.com/channel/0029VbBXuGe4yltMLngL582d*
 
 *👑 SUPPORT GROUP 👑*
 *https://chat.whatsapp.com/BwWffeDwiqe6cjDDklYJ5m?mode=ems_copy_t*
 
 *👑 BILAL-MD WHATSAPP BOT 👑*`;
 
-        // 1️⃣ Send image with caption first
+        // ✅ Fixed safe image (from imgbb)
         await conn.sendMessage(from, {
-            image: { url: config.MENU_IMAGE_URL || 'https://files.catbox.moe/kunzpz.png' },
+            image: { url: 'https://i.ibb.co/4ZX9kTWy/BILAL-MD.jpg' },
             caption: "*👑 BILAL-MD MENU 👑*"
         }, { quoted: mek });
 
-        // 2️⃣ Wait 1 second
         await sleep(1000);
 
-        // 3️⃣ Send menu line-by-line
+        // Send menu line by line
         const lines = menuText.split("\n");
         let currentText = "";
         const msg = await conn.sendMessage(from, { text: currentText }, { quoted: mek });
 
         for (const line of lines) {
             currentText += line + "\n";
-            await sleep(500); // 0.5 sec
-            // Edit menu message
+            await sleep(500);
             await conn.relayMessage(from, {
                 protocolMessage: {
                     key: msg.key,
@@ -178,7 +182,7 @@ cmd({
         }
 
     } catch (e) {
-        console.error('Menu Error:', e);
-        reply(`❌ Menu error: ${e.message}`);
+        console.error('❌ Error:', e);
+        reply(`*DUBARA LIKHO ❮MENU❯ 🥺❤️*\n\n_Reason:_ ${e.message}`);
     }
 });
