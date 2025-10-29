@@ -3,7 +3,7 @@ const axios = require('axios');
 
 cmd({
     pattern: "ai",
-    alias: ["bot", "white", "gptxd", "gpt4", "bing"],
+    alias: ["bot", "white", "gptf4", "gpt4", "bing"],
     desc: "Chat with an AI model",
     category: "ai",
     react: "🤖",
@@ -16,16 +16,19 @@ async (conn, mek, m, { from, args, q, reply, react }) => {
         const apiUrl = `https://saviya-kolla-api.koyeb.app/ai/saviya-ai?query=${encodeURIComponent(q)}`;
         const { data } = await axios.get(apiUrl);
 
-        if (!data || !data.answer) {
+        // API ke possible response keys
+        const aiReply = data.answer || data.result || data.message || data.response || null;
+
+        if (!aiReply) {
             await react("❌");
-            return reply("⚠️ AI failed to respond. Please try again later.");
+            return reply("⚠️ AI didn’t return any reply. Try again later or check API link.");
         }
 
-        await reply(`🤖 *BILAL-MD AI Response:*\n\n${data.answer}`);
         await react("✅");
+        await reply(`🤖 *BILAL-MD AI Response:*\n\n${aiReply}`);
     } catch (e) {
-        console.error("Error in AI command:", e);
+        console.error("Error in AI command:", e.message || e);
         await react("❌");
-        reply("❌ Error occurred while communicating with the AI API.");
+        reply("❌ Error: Unable to reach the AI API. Maybe it's down or returned invalid data.");
     }
 });
