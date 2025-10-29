@@ -1,43 +1,55 @@
-// 🔥 Code by BILAL
+// 🔥 Code by BILAL (Improved UPTIME Format)
 const { cmd } = require('../command');
-const { runtime, sleep } = require('../lib/functions');
+const { sleep } = require('../lib/functions');
 
 cmd({
   pattern: "uptime",
   alias: ["runtime", "utime", "upt", "upti", "uptim", "uptimes"],
   desc: "Show bot uptime with live updates every 1 second for 30 minutes",
   category: "main",
-  react: "🔰",
+  react: "🌹",
   filename: __filename
 }, async (conn, mek, m, { from, reply }) => {
   try {
-    // 🥺 React at command start
+    // 🥺 React when command starts
     await conn.sendMessage(from, { react: { text: '🥺', key: m.key } });
 
     // ⏱️ Initial waiting message
     const msg = await conn.sendMessage(from, {
-      text: `*UPTIME CHECK HO RAHA HAI...☺️*`
+      text: `*CHECKING UPTIME.....☺️*`
     }, { quoted: mek });
 
-    // 🔁 30 minutes = 1800 updates (1 per second)
-    for (let i = 0; i < 1800; i++) {
-      const up = runtime(process.uptime());
-      await sleep(1000); // 1 second delay
+    // Wait 3 seconds before showing uptime
+    await sleep(3000);
 
+    // Function to format uptime like 00H 00M 00S
+    function formatUptime(seconds) {
+      const hrs = String(Math.floor(seconds / 3600)).padStart(2, '0');
+      const mins = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
+      const secs = String(Math.floor(seconds % 60)).padStart(2, '0');
+      return `${hrs}H ${mins}M ${secs}S`;
+    }
+
+    // 🔁 Update every second for 30 minutes (1800s)
+    for (let i = 0; i < 1800; i++) {
+      const uptime = formatUptime(process.uptime());
+      await sleep(1000);
       await conn.relayMessage(from, {
         protocolMessage: {
           key: msg.key,
           type: 14,
           editedMessage: {
-            conversation: `*👑 UPTIME :❯ ${up} 👑*`
+            conversation: `*👑 UPTIME :❯ ${uptime} 👑*`
           }
         }
       }, {});
     }
 
-    // ☺️ React at end
+    // ☺️ React when updates end
+    await conn.sendMessage(from, { react: { text: '☺️', key: m.key } });
+
   } catch (e) {
-    console.error("*DUBARA ❮uptime❯ LIKHO 🥺*", e);
+    console.error("Uptime Error:", e);
     await conn.sendMessage(from, { react: { text: '😔', key: m.key } });
     reply(`*DUBARA ❮uptime❯ LIKHO 🥺*`);
   }
