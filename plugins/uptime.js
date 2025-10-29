@@ -1,4 +1,4 @@
-// 🔥 Code by WHITESHADOW
+// 🔥 Code by BILAL
 const { cmd } = require('../command');
 const { runtime, sleep } = require('../lib/functions');
 
