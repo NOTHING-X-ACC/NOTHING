@@ -1,74 +1,62 @@
 const { cmd } = require('../command');
 const axios = require('axios');
 
-// Global flag for chatbot status
-let chatbotEnabled = false;
+let chatbotEnabled = false; // default OFF
 
-// ===============================
-// 🤖 ChatBot Toggle Command
-// ===============================
+// 🔘 Command to enable/disable chatbot
 cmd({
     pattern: "chatbot",
-    desc: "Enable/disable ChatBot auto-reply mode",
+    alias: ["autoai", "botchat"],
+    desc: "Enable or disable the auto AI chatbot",
     category: "AI",
-    react: "😐",
+    react: "🤖",
     filename: __filename
-}, 
-async (conn, mek, m, { from, q, reply }) => {
+},
+async (conn, mek, m, { args, reply }) => {
     try {
-        const text = q ? q.toLowerCase() : "";
+        const option = (args[0] || "").toLowerCase();
 
-        if (!text) {
-            await conn.sendMessage(from, { react: { text: "ℹ️", key: mek.key } });
-            return reply(`⚙️ *ChatBot Controller*\n\nUse:\n.chatbot on — Enable\n.chatbot off — Disable\n.chatbot status — Check`);
-        }
-
-        if (text === "on") {
+        if (option === "on") {
             chatbotEnabled = true;
-            await reply("✅ *ChatBot mode enabled!* 🤖");
-            await conn.sendMessage(from, { react: { text: "🟢", key: mek.key } });
-        } 
-        else if (text === "off") {
+            await reply("✅ *ChatBot enabled!*\nNow I’ll automatically reply to all messages.");
+            await conn.sendMessage(m.chat, { react: { text: "🟢", key: mek.key } });
+        } else if (option === "off") {
             chatbotEnabled = false;
-            await reply("❌ *ChatBot mode disabled!* 😴");
-            await conn.sendMessage(from, { react: { text: "🔴", key: mek.key } });
-        } 
-        else if (text === "status") {
-            await reply(`📊 *ChatBot status:* ${chatbotEnabled ? "🟢 ON" : "🔴 OFF"}`);
-            await conn.sendMessage(from, { react: { text: "📊", key: mek.key } });
-        } 
-        else {
-            await reply("⚠️ Invalid option. Use `.chatbot on` or `.chatbot off`");
+            await reply("❌ *ChatBot disabled!*\nI’ll stop replying automatically.");
+            await conn.sendMessage(m.chat, { react: { text: "🔴", key: mek.key } });
+        } else {
+            await reply(
+                `⚙️ *ChatBot Control*\n\nUsage:\n.chatbot on  → Enable auto AI chat\n.chatbot off → Disable auto AI chat\n\nCurrent: ${chatbotEnabled ? "🟢 ON" : "🔴 OFF"}`
+            );
+            await conn.sendMessage(m.chat, { react: { text: "ℹ️", key: mek.key } });
         }
     } catch (e) {
         console.error(e);
-        await reply("❌ Error while toggling ChatBot.");
+        await reply("⚠️ Error toggling chatbot mode.");
     }
 });
 
-// ===============================
-// 💬 Auto AI Reply (global listener)
-// ===============================
+// 💬 Auto AI Reply when enabled
 cmd({
     pattern: "autoreply",
-    dontAddCommandList: true,
-}, 
-async (conn, mek, m, { from, body }) => {
+    dontAddCommandList: true
+},
+async (conn, mek, m, { body }) => {
     try {
-        if (!chatbotEnabled) return; // chatbot off
-        if (mek.key.fromMe) return;  // skip bot’s own messages
+        if (!chatbotEnabled) return;
+        if (mek.key.fromMe) return;
 
-        const msg = body?.trim();
-        if (!msg) return;
+        const message = body?.trim();
+        if (!message) return;
 
         const API_URL = "https://chatbot-api-key-eda9b68bbf35.herokuapp.com/api/chat";
+        const res = await axios.post(API_URL, { message }); // ✅ fixed key
 
-        const res = await axios.post(API_URL, { prompt: msg });
-        const replyText = res.data?.reply || "🤖 (No AI response)";
-
-        await conn.sendMessage(from, { text: replyText }, { quoted: mek });
+        const aiReply = res.data?.reply || "🤖 (No reply)";
+        await conn.sendMessage(m.chat, { text: aiReply }, { quoted: mek });
+        await conn.sendMessage(m.chat, { react: { text: "☺️", key: mek.key } });
 
     } catch (err) {
-        console.error("AI ChatBot Error:", err);
+        console.error("AI Reply Error:", err);
     }
 });
