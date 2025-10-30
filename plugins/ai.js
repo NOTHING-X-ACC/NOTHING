@@ -3,32 +3,36 @@ const axios = require('axios');
 
 cmd({
     pattern: "ai",
-    alias: ["bot", "white", "gptxd", "gpt4x", "bing"],
-    desc: "Chat with an AI model using Gifted API",
-    category: "ai",
-    react: "🤖",
+    alias: ["gpt", "ask", "chatgpt"],
+    desc: "Chat with AI using OpenAI API (via Heroku)",
+    category: "AI",
+    react: "😁",
     filename: __filename
 },
-async (conn, mek, m, { from, args, q, reply, react }) => {
+async (conn, mek, m, { from, q, reply }) => {
     try {
-        if (!q) return reply("💬 Please provide a message for the AI.\nExample: `.ai What is JavaScript?`");
+        if (!q) return reply("❌ *Please enter a question or message.*\n\nExample:\n.ai Who made you?");
 
-        const apiUrl = `https://api.giftedtech.co.ke/api/ai/ai?apikey=gifted&query=${encodeURIComponent(q)}`;
-        const { data } = await axios.get(apiUrl, { timeout: 15000 }); // 15s safety timeout
+        // Show typing or waiting message
+        await reply("⏳ *AI thinking... please wait*");
 
-        // API ke possible response fields
-        const aiReply = data.answer || data.result || data.message || data.response || null;
+        // 🔗 Your working API URL
+        const API_URL = "https://ai-api-key-699ac94e6fae.herokuapp.com/api/ask";
 
-        if (!aiReply || typeof aiReply !== 'string' || aiReply.trim() === '') {
-            await react("❌");
-            return reply("⚠️ AI failed to generate a response. Try again later or check API status.");
+        // 🧠 Send the user's question to your Heroku AI API
+        const res = await axios.post(API_URL, {
+            prompt: q
+        });
+
+        // 📩 Handle and send the response
+        if (res.data && res.data.reply) {
+            await reply(res.data.reply);
+        } else {
+            await reply("⚠️ *No reply received from AI server.*");
         }
 
-        await react("✅");
-        await reply(`🤖 *BILAL-MD AI Response:*\n\n${aiReply}`);
-    } catch (e) {
-        console.error("Error in AI command:", e.message || e);
-        await react("❌");
-        reply("❌ *Error:* Unable to connect to Gifted AI API. Please try again later.");
+    } catch (err) {
+        console.error(err);
+        await reply("❌ *Error communicating with AI server.*\nCheck logs or API status.");
     }
 });
