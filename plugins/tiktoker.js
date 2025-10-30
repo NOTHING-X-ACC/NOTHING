@@ -2,7 +2,7 @@ const axios = require('axios');
 const { sms } = require('../lib/msg'); // aapke sms.js ka path
 
 module.exports = {
-  name: "tiktok",
+  name: "tiktoker",
   alias: ["tt", "ttdl", "tiktokdl"],
   desc: "Download TikTok video using custom API",
   category: "downloader",
