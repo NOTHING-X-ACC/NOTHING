@@ -3,18 +3,18 @@ const axios = require('axios');
 
 cmd({
     pattern: "ai",
-    alias: ["gpt", "ask", "chatgpt"],
+    alias: ["gpt", "ask", "chatgpt", "bing"],
     desc: "Chat with AI using OpenAI API (via Heroku)",
     category: "AI",
-    react: "🤖",
+    react: "☺️",
     filename: __filename
 },
 async (conn, mek, m, { from, q, reply }) => {
     try {
-        if (!q) return reply("❌ *Please enter a question or message.*\n\nExample:\n.ai Who made you?");
+        if (!q) return reply("*APKE PAS KOI SAWAL HAI 🤔 AUR APKO USKA JAWAB NAHI MIL RAHA 🥺 TO KIA ME APKE SAWAL KA JAWAB DHUND KAR DO 😇*\n *TO AP ESE LIKHO ☺️* \n\n *GPT ❮APKA SAWAL❯* \n*AI ❮APKA SAWAL❯* \n\n *JAB AP ESE LIKHO GE TO APKE SAWAL KA JAWAB MIL JAYE GA 😍❤️*");
 
         // Show typing or waiting message
-        await reply("⏳ *AI thinking... please wait*");
+        await reply("*👑 BILAL-MD INTELLIGENCE 👑*");
 
         // 🔗 Your working API URL
         const API_URL = "https://ai-api-key-699ac94e6fae.herokuapp.com/api/ask";
@@ -28,7 +28,7 @@ async (conn, mek, m, { from, q, reply }) => {
         if (res.data && res.data.reply) {
             await reply(res.data.reply);
         } else {
-            await reply("⚠️ *No reply received from AI server.*");
+            await reply("*APKE SAWAL KA JAWAB NAHI MILA 😔*");
         }
 
     } catch (err) {
