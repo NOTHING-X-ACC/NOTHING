@@ -1,58 +1,28 @@
-const { cmd } = require('../command');
+const { cmd } = require('../command'); // tumhare command handler
 const axios = require('axios');
 
 cmd({
-    pattern: "tiktok",
-    alias: ["ttdl", "tt", "tiktokdl"],
-    desc: "Download TikTok video without watermark (Saviya-Kolla API)",
-    category: "downloader",
-    react: "🎵",
+    pattern: 'tiktok',
+    desc: 'Download TikTok video using custom API',
+    category: 'downloader',
+    react: '🎵',
     filename: __filename
-},
-async (conn, mek, m, { from, q, reply }) => {
-    let waitMsg;
+}, async (conn, mek, m, { from, args, q, reply }) => {
+    if (!q) return reply('Please provide a TikTok link! Example: .tiktok https://vt.tiktok.com/...');
+
     try {
-        // Initial reaction
-        await conn.sendMessage(from, { react: { text: "🥺", key: mek.key } });
+        // Call custom API
+        const apiUrl = 'https://tiktokapikey-795e60b7ebb1.herokuapp.com/api/tiktok';
+        const response = await axios.post(apiUrl, { url: q });
+        const data = response.data;
 
-        if (!q) return reply(
-            "*❌ Please provide a TikTok video link!*\n\nExample:\n```.tiktok https://www.tiktok.com/@username/video/123456789```"
-        );
+        if (!data || !data.videoUrl) return reply('Failed to fetch TikTok video!');
 
-        if (!q.includes("tiktok.com")) {
-            await conn.sendMessage(from, { react: { text: "😔", key: mek.key } });
-            return reply("*⚠️ Invalid TikTok link! Please check and try again.*");
-        }
+        // Send video to WhatsApp
+        await conn.sendMessage(from, { video: { url: data.videoUrl }, caption: 'Here is your TikTok video!' }, { quoted: m });
 
-        // Waiting message
-        waitMsg = await conn.sendMessage(from, { text: "*📥 Downloading your TikTok video... Please wait 😇*" });
-
-        // 🧠 API call (Saviya-Kolla only)
-        const api = `https://saviya-kolla-api.koyeb.app/download/tiktok?url=${q}`;
-        const { data } = await axios.get(api);
-
-        const videoUrl = data?.video || data?.result?.video || data?.data?.play;
-        if (!videoUrl) {
-            if (waitMsg) await conn.sendMessage(from, { delete: waitMsg.key });
-            await conn.sendMessage(from, { react: { text: "😔", key: mek.key } });
-            return reply("⚠️ TikTok download temporarily unavailable.\nPlease try again later 🥺");
-        }
-
-        // 🎬 Send video
-        await conn.sendMessage(from, {
-            video: { url: videoUrl },
-            caption: `*👑 BY: BILAL-MD 👑*\n\n✅ Source: *Saviya-Kolla API*`,
-            contextInfo: { mentionedJid: [m.sender] }
-        }, { quoted: mek });
-
-        // Cleanup + react
-        if (waitMsg) await conn.sendMessage(from, { delete: waitMsg.key });
-        await conn.sendMessage(from, { react: { text: "☺️", key: mek.key } });
-
-    } catch (e) {
-        console.error("TikTok command error:", e);
-        if (waitMsg) await conn.sendMessage(from, { delete: waitMsg.key });
-        await conn.sendMessage(from, { react: { text: "😔", key: mek.key } });
-        reply("*⚠️ Something went wrong. Please try again later 🥺*");
+    } catch (err) {
+        console.error(err);
+        reply('❌ Error while downloading TikTok video!');
     }
 });
