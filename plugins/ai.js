@@ -3,7 +3,7 @@ const axios = require('axios');
 
 cmd({
     pattern: "ai",
-    alias: ["gpt", "ask", "chatgpt"],
+    alias: ["gpt", "ask", "chatgpt", "bing"],
     desc: "Chat with AI using OpenAI API (via Heroku)",
     category: "AI",
     react: "🥺", // React jab command likha jaye
@@ -16,23 +16,20 @@ async (conn, mek, m, { from, q, reply }) => {
 
         // ❓ If no question given — show guidance
         if (!q) {
-            const guidance = `
-🤖 *AI Chat Usage Guide:*
-Use this command to chat with AI!
+            const guidance = `APKE PASS KOI SAWAL HAI 🤔 AUR APKO UUSKA JAWAB NAHI MIL RAHA 🥺* 
+*TO AP ESE LIKHO ☺️*
 
-💬 Example:
-.ai What is the capital of Japan?
+*GPT ❮ APKA SAWAL ❯*
 
-💡 Tip:
-You can ask anything — facts, jokes, code help, etc.
+*TO APKO APKE SAWAL KA JAWAB MIL JAYE GA 🥰❤️*
 `;
             await reply(guidance);
-            await conn.sendMessage(from, { react: { text: "📘", key: m.key } });
+            await conn.sendMessage(from, { react: { text: "🤔", key: m.key } });
             return;
         }
 
         // ⏳ Send waiting message
-        const waitMsg = await reply("⏳ *AI thinking... please wait*");
+        const waitMsg = await reply("*APKE SAWAL KA JAWAB DHUNDA JA RAHA HAI...😃**");
         await conn.sendMessage(from, { react: { text: "⌛", key: waitMsg.key } });
 
         // 🌐 Your deployed API URL
@@ -51,13 +48,13 @@ You can ask anything — facts, jokes, code help, etc.
             await reply(res.data.reply);
             await conn.sendMessage(from, { react: { text: "☺️", key: m.key } });
         } else {
-            await reply("⚠️ *No reply received from AI server.*");
-            await conn.sendMessage(from, { react: { text: "😕", key: m.key } });
+            await reply("*APKE SAWAL KA JAWAB NAHI MILA ☹️*");
+            await conn.sendMessage(from, { react: { text: "☹️", key: m.key } });
         }
 
     } catch (err) {
         console.error(err);
-        await reply("❌ *Error communicating with AI server.*\nPlease check logs or API status.");
-        await conn.sendMessage(from, { react: { text: "💀", key: m.key } });
+        await reply("*DUBARA KOSHISH KARE 😔*");
+        await conn.sendMessage(from, { react: { text: "😔", key: m.key } });
     }
 });
