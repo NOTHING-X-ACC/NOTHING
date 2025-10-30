@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { sms } = require('../lib/sms'); // aapke sms.js ka path
+const { sms } = require('../lib/msg'); // aapke sms.js ka path
 
 module.exports = {
   name: "tiktok",
