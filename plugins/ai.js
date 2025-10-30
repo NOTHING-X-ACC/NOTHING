@@ -29,7 +29,7 @@ async (conn, mek, m, { from, q, reply }) => {
         }
 
         // ⏳ Send waiting message
-        const waitMsg = await reply("*APKE SAWAL KA JAWAB DHUNDA JA RAHA HAI...😃**");
+        const waitMsg = await reply("*APKE SAWAL KA JAWAB DHUNDA JA RAHA HAI...😃*");
         await conn.sendMessage(from, { react: { text: "😃", key: waitMsg.key } });
 
         // 🌐 Your deployed API URL
