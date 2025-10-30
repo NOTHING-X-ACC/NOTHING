@@ -16,7 +16,7 @@ async (conn, mek, m, { from, q, reply }) => {
 
         // ❓ If no question given — show guidance
         if (!q) {
-            const guidance = `*APKE PASS KOI SAWAL HAI 🤔 AUR APKO USKA JAWAB NAHI MIL RAHA 🥺* 
+            const guidance = `*APKE PASS KOI SAWAL HAI 🤔 AUR APKO USKA JAWAB NAHI MIL RAHA 🥺 KIA ME APKE SAWAL KA JAWAB DHUND DOO 😇* 
 *TO AP ESE LIKHO ☺️*
 
 *GPT ❮ APKA SAWAL ❯*
