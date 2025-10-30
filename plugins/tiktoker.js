@@ -5,6 +5,7 @@ module.exports = {
   name: "tiktoker",
   alias: ["tt", "ttdl", "tiktokdl"],
   desc: "Download TikTok video using custom API",
+  react: "😃",
   category: "downloader",
   async exec(conn, mek, args) {
     const m = sms(conn, mek);
