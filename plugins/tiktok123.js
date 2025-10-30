@@ -2,7 +2,7 @@ const { cmd } = require('../command'); // tumhare command handler
 const axios = require('axios');
 
 cmd({
-    pattern: 'tiktok',
+    pattern: 'tiktok123',
     desc: 'Download TikTok video using custom API',
     category: 'downloader',
     react: '🎵',
