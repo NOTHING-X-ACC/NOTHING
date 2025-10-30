@@ -292,7 +292,7 @@ if (
   senderNumber.includes("923078071982")
 ) {
   if (isReact) return;
-  await m.react("👑");
+  await m.react("🧑🏻‍💻");
 						 }
   //==========public react============//
   // Auto React 
