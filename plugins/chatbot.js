@@ -1,68 +1,70 @@
 const { cmd } = require('../command');
 const axios = require('axios');
 
-// 🧠 Global chatbot toggle
-let chatBotEnabled = false;
+// Global flag for chatbot status
+let chatbotEnabled = false;
 
-// =========================
-// 🤖 ChatBot Controller
-// =========================
+// ===============================
+// 🤖 ChatBot Toggle Command
+// ===============================
 cmd({
     pattern: "chatbot",
-    alias: ["autoai", "aichat"],
-    desc: "Enable or disable ChatBot auto mode",
+    desc: "Enable/disable ChatBot auto-reply mode",
     category: "AI",
-    react: "🙄",
+    react: "😐",
     filename: __filename
-},
+}, 
 async (conn, mek, m, { from, q, reply }) => {
     try {
-        const input = q ? q.toLowerCase() : "";
+        const text = q ? q.toLowerCase() : "";
 
-        if (!input) {
-            return reply(`⚙️ *ChatBot Controller*\n\nUsage:\n.chatbot on — enable auto chat\n.chatbot off — disable chat\n.chatbot status — check mode`);
+        if (!text) {
+            await conn.sendMessage(from, { react: { text: "ℹ️", key: mek.key } });
+            return reply(`⚙️ *ChatBot Controller*\n\nUse:\n.chatbot on — Enable\n.chatbot off — Disable\n.chatbot status — Check`);
         }
 
-        if (input === "on") {
-            chatBotEnabled = true;
+        if (text === "on") {
+            chatbotEnabled = true;
             await reply("✅ *ChatBot mode enabled!* 🤖");
             await conn.sendMessage(from, { react: { text: "🟢", key: mek.key } });
-        } else if (input === "off") {
-            chatBotEnabled = false;
+        } 
+        else if (text === "off") {
+            chatbotEnabled = false;
             await reply("❌ *ChatBot mode disabled!* 😴");
             await conn.sendMessage(from, { react: { text: "🔴", key: mek.key } });
-        } else if (input === "status") {
-            await reply(`📊 *ChatBot mode:* ${chatBotEnabled ? "🟢 ON" : "🔴 OFF"}`);
+        } 
+        else if (text === "status") {
+            await reply(`📊 *ChatBot status:* ${chatbotEnabled ? "🟢 ON" : "🔴 OFF"}`);
             await conn.sendMessage(from, { react: { text: "📊", key: mek.key } });
-        } else {
+        } 
+        else {
             await reply("⚠️ Invalid option. Use `.chatbot on` or `.chatbot off`");
         }
-
-    } catch (err) {
-        console.error("ChatBot command error:", err);
-        await reply("❌ Error while changing ChatBot mode.");
+    } catch (e) {
+        console.error(e);
+        await reply("❌ Error while toggling ChatBot.");
     }
 });
 
-// =========================
-// 💬 Auto AI Reply System
-// =========================
+// ===============================
+// 💬 Auto AI Reply (global listener)
+// ===============================
 cmd({
     pattern: "autoreply",
     dontAddCommandList: true,
-},
+}, 
 async (conn, mek, m, { from, body }) => {
     try {
-        // Skip if off or bot's own msg
-        if (!chatBotEnabled || mek.key.fromMe) return;
-        const text = body?.trim();
-        if (!text) return;
+        if (!chatbotEnabled) return; // chatbot off
+        if (mek.key.fromMe) return;  // skip bot’s own messages
 
-        // 🌐 Your ChatBot API
+        const msg = body?.trim();
+        if (!msg) return;
+
         const API_URL = "https://chatbot-api-key-eda9b68bbf35.herokuapp.com/api/chat";
 
-        const res = await axios.post(API_URL, { prompt: text });
-        const replyText = res.data?.reply || "🤖 No reply from AI.";
+        const res = await axios.post(API_URL, { prompt: msg });
+        const replyText = res.data?.reply || "🤖 (No AI response)";
 
         await conn.sendMessage(from, { text: replyText }, { quoted: mek });
 
