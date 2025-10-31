@@ -6,7 +6,7 @@ pattern: "tiktok",
 alias: ["ttdl", "tt", "tiktokdl", "ttvideo", "tiktokvideo", "ttvid"],
 desc: "Download TikTok video without watermark",
 category: "downloader",
-react: "🥺",
+react: "☺️",
 filename: __filename
 },
 async (conn, mek, m, { from, args, q, reply }) => {
