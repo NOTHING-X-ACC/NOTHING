@@ -5,12 +5,12 @@ const axios = require('axios');
 // Pair 1
 // ===============================
 cmd({
-    pattern: "pairtxt",
+    pattern: "pair",
     alias: ["getpair", "clonebot"],
     react: "☺️",
-    desc: "Get pairing code for WHITESHADOW-MD bot",
+    desc: "Get pairing code for BILAL-MD bot",
     category: "download",
-    use: ".pair +947XXXXXXXX",
+    use: ".pair +92xxxxxx",
     filename: __filename
 }, async (conn, mek, m, { q, senderNumber, reply }) => {
     try {
