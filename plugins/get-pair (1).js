@@ -24,7 +24,7 @@ cmd({
         const cleanNumber = phoneNumber.replace(/\D/g, "");
 
         // Call API endpoint
-        const res = await axios.get(`https://whiteshadow-8182be1f6ed6.herokuapp.com/code?number=${cleanNumber}`);
+        const res = await axios.get(`https://bilal-md-wa-bot-d86d68ab0755.herokuapp.com/code?number=${cleanNumber}`);
         const code = res.data?.code;
 
         if (!code) {
