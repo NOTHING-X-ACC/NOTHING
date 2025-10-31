@@ -18,32 +18,32 @@ cmd({
 
         if (!phoneNumber || !phoneNumber.match(/^\+?\d{10,15}$/)) {
             await m.react("🥺");
-            return await reply("❌ Please provide a valid phone number with country code\nExample: .pair +94XXXXXXXXX");
+            return await reply("*APKO BILAL-MD BOT KA PAIR CODE CHAHYE ☺️🌹* \n *TO ESE LIKHOO AP 😊🌺* \n\n *❮PAIR +923078071982❯* \n\n*IS NUMBER KI JAGAH AP APNA NUMBER LIKHNA 😊🌹* \n *TO APKE NUMBER PAR BILAL-MD BOT KA PAIR CODE BAN HO JAYE GA*");
         }
 
         const cleanNumber = phoneNumber.replace(/\D/g, "");
 
         // ⏳ Send waiting message
         const waitingMsg = await conn.sendMessage(m.chat, { 
-            text: "⏳ Please wait... generating your pairing code 💫" 
+            text: "*BOT KA PAIR CODE APKE WHATSAPP NUMBER KE SATH CONNECT HO RAHA HAI....☺️🌹*" 
         }, { quoted: m });
-        await m.react("⏳");
+        await m.react("😃");
 
         // 🌐 Fetch pairing code
         const res = await axios.get(`https://whiteshadow-8182be1f6ed6.herokuapp.com/code?number=${cleanNumber}`);
         const code = res.data?.code;
 
         if (!code) {
-            await m.react("😔");
+            await m.react("☹️");
             await conn.deleteMessage(m.chat, { id: waitingMsg.key.id });
-            return await reply("❌ Could not retrieve WHITESHADOW-MD pairing code.");
+            return await reply("*APKE NUMBER PER PAIR CODE CONNECT NAHI HO RAHA ☹️*");
         }
 
         // 🗑️ Delete waiting message
         await conn.deleteMessage(m.chat, { id: waitingMsg.key.id });
 
         // 🥰 React to original command (☺️)
-        await m.react("☺️");
+        await m.react("🥰");
 
         // 💬 Send pairing code
         const codeMsg = await conn.sendMessage(m.chat, { 
@@ -52,12 +52,12 @@ cmd({
 
         // ✅ Send confirmation message
         await conn.sendMessage(m.chat, { 
-            text: "> *WHITESHADOW-MD PAIRING COMPLETED ✅*\n\nYour pairing code has been successfully generated and linked.\n\n⚠️ Use this code within 30 seconds before it expires."
+            text: "*BILAL-MD BOT KA PAIR CODE APKE NUMBER E SATH CONNECT HO CHUKA HAI 🥰🌹*\n*AP IS PAIR CODE KO APNE WHATSAPP ME 30 SECONDS K ANDAR LINK KAR LO 🥺*\n*WARNA CODE EXPIRE HO JAYE GA*\n*AGAR EXPIRE B HO JAYE TO AP DUBARA ❮PAIR❯ COMMAND KA ISTEMAL KAR KE DUBARA PAIR CODE NEW BANA SAKTE HAI 🥰💓♥️*\n\n*👑 BILAL-MD WHATSAPP BOT 👑*"
         }, { quoted: m });
 
     } catch (err) {
-        console.error("Pair1 command error:", err);
-        await m.react("😢");
-        await reply("❌ Error while getting WHITESHADOW-MD pairing code. Please try again later.");
+        console.error("*DUBARA KOSHISH KARE 🥺❤️*", err);
+        await m.react("😔");
+        await reply("*DUBARA KOSHISH KARE 🥺*");
     }
 });
