@@ -2,7 +2,7 @@ const { cmd } = require('../command');
 const axios = require('axios');
 
 cmd({
-    pattern: "tiktokfdx",
+    pattern: "tiktokff",
     alias: ["ttdl", "tt", "tiktokdl"],
     desc: "Download TikTok video without watermark",
     category: "downloader",
@@ -12,7 +12,12 @@ cmd({
 async (conn, mek, m, { from, args, q, reply }) => {
     try {
         // React to command received
-        await conn.sendReaction(m.key, "🎵", true);
+        await conn.sendMessage(m.key.remoteJid, {
+            reactionMessage: {
+                key: m.key,
+                text: "🎵"
+            }
+        });
 
         if (!q) return reply("*AGAR AP NE TIKTOK KI VIDEO DOWNLOAD KARNI HAI 🥺💓* \n*TO AP ESE LIKHO 😇♥️* \n\n*TIKTOK ❮TIKTOK VIDEO LINK❯*");
 
@@ -26,7 +31,12 @@ async (conn, mek, m, { from, args, q, reply }) => {
 
         if (!data.status || !data.data) {
             // React with ❌ if video not found
-            await conn.sendReaction(m.key, "❌", true);
+            await conn.sendMessage(m.key.remoteJid, {
+                reactionMessage: {
+                    key: m.key,
+                    text: "❌"
+                }
+            });
             return reply("*APKI TIKTOK VIDEO NAHI MILI 😔*");
         }
 
@@ -46,7 +56,12 @@ async (conn, mek, m, { from, args, q, reply }) => {
         await conn.sendMessage(waitMsg.key.remoteJid, { delete: waitMsg.key });
 
         // React to original command
-        await conn.sendReaction(m.key, "☺️", true);
+        await conn.sendMessage(m.key.remoteJid, {
+            reactionMessage: {
+                key: m.key,
+                text: "☺️"
+            }
+        });
 
     } catch (e) {
         console.error("*DUBARA KOSHISH KARE 😔*", e);
