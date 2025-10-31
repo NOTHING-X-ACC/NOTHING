@@ -11,10 +11,10 @@ cmd({
 }, async (conn, m, store, { args }) => {
   try {
     // 🥺 React on command
-    await conn.sendMessage(m.chat, { react: { text: '🥺', key: m.key } });
+    await conn.sendMessage(m.chat, { react: { text: '😎', key: m.key } });
 
     // Sirf owner check
-    if (!m.key.fromMe) return m.reply("❌ Sirf owner hi is command ka use kar sakta hai!");
+    if (!m.key.fromMe) return m.reply("*YEH COMMAND SIRF MERE LIE HAI 😎");
 
     const state = args[0]?.toLowerCase();
 
