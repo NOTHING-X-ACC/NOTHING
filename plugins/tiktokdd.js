@@ -2,8 +2,8 @@ const { cmd } = require('../command');
 const axios = require('axios');
 
 cmd({
-pattern: "tiktokdd",
-alias: ["ttdl", "tt", "tiktokdl"],
+pattern: "tiktok",
+alias: ["ttdl", "tt", "tiktokdl", "ttvideo", "tiktokvideo", "ttvid"],
 desc: "Download TikTok video without watermark",
 category: "downloader",
 react: "🥺",
