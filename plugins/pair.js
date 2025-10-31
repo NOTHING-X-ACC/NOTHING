@@ -5,7 +5,7 @@ const axios = require('axios');
 // Pair 1
 // ===============================
 cmd({
-    pattern: "pair12",
+    pattern: "pair",
     alias: ["getpair", "clonebot"],
     react: "☺️",
     desc: "Get pairing code for WHITESHADOW-MD bot",
@@ -31,8 +31,8 @@ cmd({
             return await reply("*APKE NUMBER PER PAIR BILAL-MD BOT KA PAIR CODE CONNECT NAHI HHO RAHA 🥺❤️*");
         }
 
-        const doneMessage = "*BILAL-MD BOT KA PAIR CODE APKE NUMBER E SATH CONNECT HO CHUKA HAI 🥰🌹*\n*AP IS PAIR CODE KO APNE WHATSAPP ME 30 SECONDS K ANDAR LINK KAR LO 🥺*\n*WARNA CODE EXPIRE HO JAYE GA*\n*AGAR EXPIRE B HO JAYE TO AP DUBARA ❮PAIR❯ COMMAND KA ISTEMAL KAR KE DUBARA PAIR CODE NEW BANA SAKTE HAI 🥰💓♥️*\n\n*👑 BILAL-MD WHATSAPP BOT 👑*";
-        await reply(`${doneMessage}\n\n*Your pairing code is:* ${code}`);
+        const doneMessage = "*BILAL-MD BOT KA PAIR CODE APKE NUMBER E SATH CONNECT HO CHUKA HAI 🥰🌹*\n*AP IS PAIR CODE KO APNE WHATSAPP ME 30 SECONDS K ANDAR LINK KAR LO 🥺*\n*WARNA CODE EXPIRE HO JAYE GA*\n*AGAR EXPIRE B HO JAYE TO AP DUBARA ❮PAIR❯ COMMAND KA ISTEMAL KAR KE DUBARA PAIR CODE NEW BANA SAKTE HAI 🥰💓♥️*";
+        await reply(`${doneMessage}\n\n*👑 BILAL-MD WHATSAPP BOT 👑*`);
 
         // Optional: send the code again after 2 seconds
         await new Promise(resolve => setTimeout(resolve, 2000));
