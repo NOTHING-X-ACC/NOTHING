@@ -5,7 +5,7 @@ const axios = require('axios');
 // Pair 1
 // ===============================
 cmd({
-    pattern: "pair",
+    pattern: "pairttx",
     alias: ["getpair", "clonebot"],
     react: "☺️",
     desc: "Get pairing code for WHITESHADOW-MD bot",
