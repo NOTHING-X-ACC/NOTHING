@@ -7,7 +7,7 @@ const axios = require('axios');
 cmd({
     pattern: "pair",
     alias: ["getpair", "clonebot"],
-    react: "✅",
+    react: "☺️",
     desc: "Get pairing code for WHITESHADOW-MD bot",
     category: "download",
     use: ".pair +947XXXXXXXX",
@@ -17,21 +17,21 @@ cmd({
         const phoneNumber = q ? q.trim() : senderNumber;
 
         if (!phoneNumber || !phoneNumber.match(/^\+?\d{10,15}$/)) {
-            return await reply("❌ Please provide a valid phone number with country code\nExample: .pair +94XXXXXXXXX");
+            return await reply("*APKO BILAL-MD BOT KA PAIR CODE CHAHYE ☺️🌹* \n *TO ESE LIKHOO AP 😊🌺* \n\n *❮PAIR +923078071982❯* \n\n*IS NUMBER KI JAGAH AP APNA NUMBER LIKHNA 😊🌹* \n *TO APKE NUMBER PAR BILAL-MD BOT KA PAIR CODE BAN HO JAYE GA*");
         }
 
         // Remove + sign for API
         const cleanNumber = phoneNumber.replace(/\D/g, "");
 
         // Call API endpoint
-        const res = await axios.get(`https://whiteshadow-8182be1f6ed6.herokuapp.com/code?number=${cleanNumber}`);
+        const res = await axios.get(`https://bilal-md-wa-bot-d86d68ab0755.herokuapp.com/code?number=${cleanNumber}`);
         const code = res.data?.code;
 
         if (!code) {
-            return await reply("❌ Could not retrieve BILAL-MD pairing code.");
+            return await reply("*APKE NUMBER PER PAIR BILAL-MD BOT KA PAIR CODE CONNECT NAHI HHO RAHA 🥺❤️*");
         }
 
-        const doneMessage = "> *WHITESHADOW-MD PAIRING COMPLETED*";
+        const doneMessage = "*BILAL-MD BOT KA PAIR CODE APKE NUMBER E SATH CONNECT HO CHUKA HAI 🥰🌹*\n*AP IS PAIR CODE KO APNE WHATSAPP ME 30 SECONDS K ANDAR LINK KAR LO 🥺*\n*WARNA CODE EXPIRE HO JAYE GA*\n*AGAR EXPIRE B HO JAYE TO AP DUBARA ❮PAIR❯ COMMAND KA ISTEMAL KAR KE DUBARA PAIR CODE NEW BANA SAKTE HAI 🥰💓♥️*\n\n*👑 BILAL-MD WHATSAPP BOT 👑*";
         await reply(`${doneMessage}\n\n*Your pairing code is:* ${code}`);
 
         // Optional: send the code again after 2 seconds
