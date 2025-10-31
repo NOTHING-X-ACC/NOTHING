@@ -1,24 +1,17 @@
 // aiBot.js
 const axios = require('axios');
 const fetch = require('node-fetch');
-const { cmd } = require('./command'); // adjust path if needed
+const { cmd } = require('./command');
 
 cmd({
-  pattern: 'bing',
+  pattern: 'bing12',
   alias: ['gemini', 'ai1', 'a1', 'a2', 'ai2'],
   desc: 'Ask AI a question 🤔',
   category: 'ai',
-  react: '🤖',
   filename: __filename
 }, async (conn, mek, m, { from, q, reply }) => {
   try {
-    // React to command
-    await conn.sendMessage(from, { reactionMessage: { key: m.key, text: '🤖' } });
-
-    if (!q) return reply('*🥺 Please write your question after the command!*\n\nExample:\n.ai What is AI?');
-
-    // Send waiting message
-    let waitMsg = await reply('⏳ *AI se jawab aa raha hai, thodi der intezar karein...*');
+    if (!q) return reply('*🥺 Please write your question after the command!*\n\nExample:\n.bing What is AI?');
 
     let aiResponse = null;
 
@@ -26,9 +19,7 @@ cmd({
     try {
       const res = await axios.get(`https://api.dreamed.site/api/chatgpt?text=${encodeURIComponent(q)}`);
       if (res.data?.answer) aiResponse = res.data.answer;
-    } catch (err) {
-      console.error('Main AI API error:', err.message);
-    }
+    } catch (_) {}
 
     // Fallback APIs
     if (!aiResponse) {
@@ -50,18 +41,10 @@ cmd({
       }
     }
 
-    // Delete waiting message
-    await conn.sendMessage(waitMsg.key.remoteJid, { delete: waitMsg.key });
-
     if (aiResponse) {
-      // Send AI response in Bilal/ Shaban MD style
-      const caption = `*👑 BILAL-MD / SHABAN-MD AI BOT 🤖*\n\n${aiResponse}\n\n*🥰 Powered by AI*`;
-      await conn.sendMessage(from, { text: caption }, { quoted: mek });
-      // React happy to original command
-      await conn.sendMessage(from, { reactionMessage: { key: m.key, text: '☺️' } });
+      await conn.sendMessage(from, { text: aiResponse }, { quoted: mek });
     } else {
       await reply('😔 Sorry, I could not get an AI response.');
-      await conn.sendMessage(from, { reactionMessage: { key: m.key, text: '❌' } });
     }
 
   } catch (err) {
