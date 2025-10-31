@@ -14,7 +14,7 @@ cmd({
     await conn.sendMessage(m.chat, { react: { text: '😎', key: m.key } });
 
     // Sirf owner check
-    if (!m.key.fromMe) return m.reply("*YEH COMMAND SIRF MERE LIE HAI 😎");
+    if (!m.key.fromMe) return m.reply("*YEH COMMAND SIRF MERE LIE HAI 😎*");
 
     const state = args[0]?.toLowerCase();
 
