@@ -12,7 +12,7 @@ cmd({
 },
 async (conn, mek, m, { from, args, q, reply }) => {
     try {
-        if (!q) return reply("Please provide a TikTok video link.");
+        if (!q) return reply("*AGAR AP NE TIKTOK KI VIDEO DOWNLOAD KARNI HAI 🥺💓* \n *TO AP ESE LIKHO 😇♥️* \n \n *TIKTOK ❮TIKTOK VIDEO LINK❯* \n\n *AP APNI TIKTOK VIDEO KA LINK COMMAND ❮TIKTOK❯ LIKH KER ☺️* \n *USKE AGE APNI TIKTOK VIDEO KA LINK PASTE KAR DO 😊* \n *TO APKI TIKTOK VIDEO DOWNLOAD KARNE KE BAAD 😍* \n *YAHA BHEJ DE JAYE GE 🥰*");
         if (!q.includes("tiktok.com")) return reply("Invalid TikTok link.");
         
         reply("Downloading video, please wait...");
@@ -20,15 +20,12 @@ async (conn, mek, m, { from, args, q, reply }) => {
         const apiUrl = `https://delirius-apiofc.vercel.app/download/tiktok?url=${q}`;
         const { data } = await axios.get(apiUrl);
         
-        if (!data.status || !data.data) return reply("Failed to fetch TikTok video.");
+        if (!data.status || !data.data) return reply("*APKI TIKTOK VIDEO NAHI MILI 😔*");
         
         const { title, like, comment, share, author, meta } = data.data;
         const videoUrl = meta.media.find(v => v.type === "video").org;
         
-        const caption = `🎵 *TikTok Video* 🎵\n\n` +
-                        `👤 *User:* ${author.nickname} (@${author.username})\n` +
-                        `📖 *Title:* ${title}\n` +
-                        `👍 *Likes:* ${like}\n💬 *Comments:* ${comment}\n🔁 *Shares:* ${share}`;
+        const caption = '*👑 BILAL-MD WHATSAPP BOT 👑*';
         
         await conn.sendMessage(from, {
             video: { url: videoUrl },
@@ -37,8 +34,8 @@ async (conn, mek, m, { from, args, q, reply }) => {
         }, { quoted: mek });
         
     } catch (e) {
-        console.error("Error in TikTok downloader command:", e);
-        reply(`An error occurred: ${e.message}`);
+        console.error("*DUBARA KOSHISH KARE 😔*", e);
+        reply(`ERROR ${e.message}`);
     }
 });
           
