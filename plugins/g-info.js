@@ -25,6 +25,9 @@ try{
         ppUrl = 'https://i.ibb.co/KhYC4FY/1221bc0bdd2354b42b293317ff2adbcf-icon.png'; 
     }
 
+    // Send group profile picture first
+    await conn.sendMessage(from, { image: { url: ppUrl }, caption: "*GROUP INFO LOADED 🥳*" }, { quoted: mek });
+
     const metadata = await conn.groupMetadata(from)
     const groupAdmins = participants.filter(p => p.admin)
     const listAdmin = groupAdmins.map((v, i) => `${i + 1}. @${v.id.split('@')[0]}`).join('\n')
@@ -83,9 +86,6 @@ try{
             editedMessage: { conversation: currentText }
         }
     }, {});
-
-    // Send group profile picture at the end
-    await conn.sendMessage(from, { image: { url: ppUrl }, caption: "*GROUP INFO LOADED 🥳*" }, { quoted: mek });
 
 } catch (e) {
     await conn.sendMessage(from, { react: { text: '❌', key: mek.key } })
