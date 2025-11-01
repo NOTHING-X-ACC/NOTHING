@@ -4,7 +4,7 @@ const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, runtime, sleep, 
 
 cmd({
     pattern: "ginfo",
-    react: "🥏",
+    react: "🥳",
     alias: ["groupinfo"],
     desc: "Get group informations.",
     category: "group",
@@ -33,13 +33,16 @@ const owner = metadata.owner
 const gdata = `
 *✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*
 *👑 GROUP INFO 👑*\n
-\t*${metadata.subject}*
+*👑 \t${metadata.subject} 👑*
 *✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*
-*Group Jid* - ${metadata.id}
-*Participant Count* - ${metadata.size}
-*Group Creator* - ${owner.split('@')[0]}
-*Group Description* - ${metadata.desc?.toString() || 'undefined'}\n
-*Group Admins* - \n${listAdmin}\n`
+*👑 JID :❯ ${metadata.id}*
+*👑 MEMBERS :❯ ${metadata.size}*
+*👑 CREATER :❯ ${owner.split('@')[0]}*
+*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*
+*👑 GROUP DESCRIPTION 👑*
+*${metadata.desc?.toString() || 'undefined'}*
+*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*\n
+*👑 GROUP ADMINS 👑* \n${listAdmin}\n\n *👑 BILAL-MD WHATSAPP BOT 👑*`
 
 await conn.sendMessage(from,{image:{url: ppUrl },caption: gdata },{quoted:mek })
 } catch (e) {
