@@ -6,7 +6,7 @@ cmd({
     alias: ["setgrouppic", "grouppp"],
     desc: "Change group profile picture (bot must be admin)",
     category: "group",
-    react: "🖼️",
+    react: "😂",
     filename: __filename
 },
 async (conn, mek, m, { from, isGroup, isBotAdmins, reply, quoted }) => {
@@ -24,13 +24,22 @@ async (conn, mek, m, { from, isGroup, isBotAdmins, reply, quoted }) => {
         let imageBuffer;
 
         // Check if user replied to an image
-        if (quoted && quoted.message.imageMessage) {
-            const media = quoted.message.imageMessage;
-            imageBuffer = await getBuffer(media);
-        } else if (m.message.imageMessage) {
-            // Or if user sent image directly with command
-            imageBuffer = await getBuffer(m.message.imageMessage);
-        } else {
+        if (quoted) {
+            const type = Object.keys(quoted.message)[0]; // get message type
+            if (type === 'imageMessage') {
+                imageBuffer = await getBuffer(quoted);
+            }
+        }
+
+        // Or check if user sent image directly
+        if (!imageBuffer) {
+            const type = Object.keys(m.message)[0];
+            if (type === 'imageMessage') {
+                imageBuffer = await getBuffer(m);
+            }
+        }
+
+        if (!imageBuffer) {
             await conn.sendMessage(from, { react: { text: '❌', key: mek.key } });
             return reply("❌ Please send or reply to an image to set as group profile picture.");
         }
