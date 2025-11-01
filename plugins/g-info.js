@@ -40,8 +40,8 @@ try{
 
     const descLines = (metadata.desc?.toString().split('\n') || ['No description']).map(l => l.trim()).filter(l => l)
     const lines = [
-        `*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*\n\t*👑 GROUP INFORMATION 👑*\n*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*`,
-        `*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*\n*👑 GROUP NAME 👑*\n*${metadata.subject}*\n*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*`,
+        `*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*\n\t*👑 GROUP INFORMATION 👑*\n*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*`,
+        `*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*\n\u200*👑 GROUP NAME 👑*\n*${metadata.subject}*\n*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*`,
         `*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*\n*👑 GROUP LINK 👑*\n${groupLink}\n*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*`,
         `*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*\n*👑 MEMBERS :❯ ${metadata.participants.length}*\n*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*`,
         `*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*\n*👑 GROUP DESCRIPTION 👑*\n*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*`
