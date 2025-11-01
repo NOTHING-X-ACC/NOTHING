@@ -26,7 +26,7 @@ try{
     }
 
     // Send group profile picture first
-    await conn.sendMessage(from, { image: { url: ppUrl }, caption: "*GROUP INFO LOADED 🥳*" }, { quoted: mek });
+    await conn.sendMessage(from, { image: { url: ppUrl }, caption: "*👑 GROUP INFORMATION 👑*" }, { quoted: mek });
 
     const metadata = await conn.groupMetadata(from)
     const groupAdmins = participants.filter(p => p.admin)
