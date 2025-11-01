@@ -19,8 +19,11 @@ try{
     if (!isBotAdmins) return reply(msr.give_adm)
 
     let ppUrl;
-    try { ppUrl = await conn.profilePictureUrl(from, 'image') } 
-    catch { ppUrl = 'https://i.ibb.co/KhYC4FY/1221bc0bdd2354b42b293317ff2adbcf-icon.png'; }
+    try { 
+        ppUrl = await conn.profilePictureUrl(from, 'image') 
+    } catch { 
+        ppUrl = 'https://i.ibb.co/KhYC4FY/1221bc0bdd2354b42b293317ff2adbcf-icon.png'; 
+    }
 
     const metadata = await conn.groupMetadata(from)
     const groupAdmins = participants.filter(p => p.admin)
@@ -32,14 +35,13 @@ try{
     let ownerJid = metadata.owner
     let ownerName = participants.find(p => p.id === ownerJid)?.name || ownerJid.split('@')[0]
 
-    // Group info lines array (description ko line by line)
     const descLines = (metadata.desc?.toString().split('\n') || ['No description']).map(l => l.trim()).filter(l => l)
     const lines = [
         `*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*\n\t*👑 GROUP INFORMATION 👑*\n*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*`,
         `*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*\n*👑 GROUP NAME 👑*\n${metadata.subject}\n*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*`,
         `*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*\n*👑 GROUP LINK 👑*\n${groupLink}\n*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*`,
-        `*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*\n*👑 MEMBERS :❯ ${metadata.participants.length}*\n*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*`
-        `*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*\n*👑 GROUP DESCRIPTION 👑*\n *✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*`
+        `*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*\n*👑 MEMBERS :❯ ${metadata.participants.length}*\n*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*`,
+        `*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*\n*👑 GROUP DESCRIPTION 👑*\n*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*`
     ];
 
     // Start with empty message
