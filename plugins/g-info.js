@@ -13,47 +13,55 @@ cmd({
 },
 async(conn, mek, m,{from, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isCreator ,isDev, isAdmins, reply}) => {
 try{
-const msr = (await fetchJson('https://raw.githubusercontent.com/JawadTech3/KHAN-DATA/refs/heads/main/MSG/mreply.json')).replyMsg
+    const msr = (await fetchJson('https://raw.githubusercontent.com/JawadTech3/KHAN-DATA/refs/heads/main/MSG/mreply.json')).replyMsg
 
-if (!isGroup) return reply(msr.only_gp)
-if (!isAdmins) { if (!isDev) return reply(msr.you_adm),{quoted:mek }} 
-if (!isBotAdmins) return reply(msr.give_adm)
-const ppUrls = [
-        'https://i.ibb.co/KhYC4FY/1221bc0bdd2354b42b293317ff2adbcf-icon.png',
-        'https://i.ibb.co/KhYC4FY/1221bc0bdd2354b42b293317ff2adbcf-icon.png',
-        'https://i.ibb.co/KhYC4FY/1221bc0bdd2354b42b293317ff2adbcf-icon.png',
-      ];
-let ppUrl = await conn.profilePictureUrl( from , 'image')
-if (!ppUrl) { ppUrl = ppUrls[Math.floor(Math.random() * ppUrls.length)];}
-const metadata = await conn.groupMetadata(from)
-const groupAdmins = participants.filter(p => p.admin);
-const listAdmin = groupAdmins.map((v, i) => `${i + 1}. @${v.id.split('@')[0]}`).join('\n');
-const owner = metadata.owner
+    if (!isGroup) return reply(msr.only_gp)
+    if (!isAdmins) { if (!isDev) return reply(msr.you_adm),{quoted:mek }} 
+    if (!isBotAdmins) return reply(msr.give_adm)
 
-const gdata = `
+    const ppUrls = [
+        'https://i.ibb.co/KhYC4FY/1221bc0bdd2354b42b293317ff2adbcf-icon.png',
+        'https://i.ibb.co/KhYC4FY/1221bc0bdd2354b42b293317ff2adbcf-icon.png',
+        'https://i.ibb.co/KhYC4FY/1221bc0bdd2354b42b293317ff2adbcf-icon.png',
+    ];
+    let ppUrl = await conn.profilePictureUrl(from, 'image')
+    if (!ppUrl) { ppUrl = ppUrls[Math.floor(Math.random() * ppUrls.length)];}
+
+    const metadata = await conn.groupMetadata(from)
+    const groupAdmins = participants.filter(p => p.admin)
+    const listAdmin = groupAdmins.map((v, i) => `${i + 1}. @${v.id.split('@')[0]}`).join('\n')
+
+    // ✅ Group link instead of JID
+    let inviteLink = await conn.groupInviteCode(from)
+    let groupLink = `https://chat.whatsapp.com/${inviteLink}`
+
+    // ✅ Creator name instead of JID
+    let ownerJid = metadata.owner
+    let ownerName = participants.find(p => p.id === ownerJid)?.name || ownerJid.split('@')[0]
+
+    const gdata = `
 *✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*
 *👑 GROUP INFORMATION 👑*
-*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬▭ ✧*
+*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*
 *👑 GROUP NAME 👑*
 *\t${metadata.subject}*
-*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬▭ ✧*
-*👑GROUP JID 👑*
-*${metadata.id}*
-*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬▭ ✧*
+*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*
+*👑GROUP LINK 👑*
+*${groupLink}*
+*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*
 *👑 MEMBERS :❯ ${metadata.size}*
-*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬▭ ✧*
-*👑 CREATER :❯ ${owner.split('@')[0]}*
+*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*
+*👑 CREATOR :❯ ${ownerName}*
 *✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*
 *👑 GROUP DESCRIPTION 👑*
 *${metadata.desc?.toString() || 'undefined'}*
 *✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*\n
 *👑 GROUP ADMINS 👑* \n${listAdmin}\n\n *👑 BILAL-MD WHATSAPP BOT 👑*`
 
-await conn.sendMessage(from,{image:{url: ppUrl },caption: gdata },{quoted:mek })
+    await conn.sendMessage(from,{image:{url: ppUrl },caption: gdata },{quoted:mek })
 } catch (e) {
-await conn.sendMessage(from, { react: { text: '❌', key: mek.key } })
-console.log(e)
-reply(`❌ *Error Accurated !!*\n\n${e}`)
+    await conn.sendMessage(from, { react: { text: '❌', key: mek.key } })
+    console.log(e)
+    reply(`❌ *Error Accurated !!*\n\n${e}`)
 }
-} )
-  
+})
