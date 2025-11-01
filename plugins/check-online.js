@@ -2,7 +2,7 @@ const { cmd } = require('../command');
 const { sleep } = require('../lib/functions');
 
 cmd({
-    pattern: "online",
+    pattern: "checkonline",
     alias: ["whosonline", "onlinemembers"],
     desc: "Check who's online in the group (Admins & Owner only)",
     category: "main",
