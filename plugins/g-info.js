@@ -54,7 +54,7 @@ try{
 *👑 CREATOR :❯ ${ownerName}*
 *✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*
 \t*👑 GROUP DESCRIPTION 👑*
-*${metadata.desc?.toString() || 'undefined'}*
+${metadata.desc?.toString() || 'undefined'}
 *✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*\n
 *👑 GROUP ADMINS 👑* \n${listAdmin}\n\n *👑 BILAL-MD WHATSAPP BOT 👑*`
 
