@@ -41,10 +41,10 @@ try{
 
     const gdata = `
 *✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*
-*👑 GROUP INFORMATION 👑*
+\t*👑 GROUP INFORMATION 👑*
 *✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*
 *👑 GROUP NAME 👑*
-*\t${metadata.subject}*
+\t\t\t*${metadata.subject}*
 *✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*
 *👑GROUP LINK 👑*
 *${groupLink}*
@@ -53,7 +53,7 @@ try{
 *✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*
 *👑 CREATOR :❯ ${ownerName}*
 *✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*
-*👑 GROUP DESCRIPTION 👑*
+\t*👑 GROUP DESCRIPTION 👑*
 *${metadata.desc?.toString() || 'undefined'}*
 *✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*\n
 *👑 GROUP ADMINS 👑* \n${listAdmin}\n\n *👑 BILAL-MD WHATSAPP BOT 👑*`
