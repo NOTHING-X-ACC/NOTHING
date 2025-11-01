@@ -42,7 +42,7 @@ async (conn, mek, m, { from, isGroup, isAdmins, isCreator, fromMe, reply }) => {
         conn.ev.off('presence.update', presenceHandler);
 
         // Delete waiting message
-        await conn.sendMessage(from, { react: { text: '✅', key: waitMsg.key } });
+        await conn.sendMessage(from, { react: { text: '☺️', key: waitMsg.key } });
         await conn.sendMessage(from, { delete: waitMsg.key });
 
         if (onlineMembers.size === 0) {
@@ -51,7 +51,7 @@ async (conn, mek, m, { from, isGroup, isAdmins, isCreator, fromMe, reply }) => {
 
         const onlineArray = Array.from(onlineMembers);
         let currentText = `*👑 ONLINE MEMBERS :❯ ❮${onlineArray.length}❯*\n*👑 OFFLINE MEMBERS :❯ *❮${groupData.participants.length}❯*\n*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*\n`;
-
+        
         // Send empty message first for live updates
         const msg = await conn.sendMessage(from, { text: currentText }, { quoted: mek });
 
