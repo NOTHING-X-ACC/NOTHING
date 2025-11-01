@@ -3,34 +3,34 @@ const { sleep } = require('../lib/functions');
 
 cmd({
     pattern: "checkonline",
-    alias: ["whosonline", "onlinemembers"],
-    desc: "Check who's online in the group (Admins & Owner only)",
+    alias: ["onlinelist", "listonline", "onmembers"],
+    desc: "Check online/offline member counts in the group",
     category: "main",
-    react: "🙄",
+    react: "🥳",
     filename: __filename
 },
 async (conn, mek, m, { from, isGroup, isAdmins, isCreator, fromMe, reply }) => {
     try {
-        // 1️⃣ Group check
+        // Group check
         if (!isGroup) {
-            await conn.sendMessage(from, { react: { text: '❌', key: mek.key } });
-            return reply("❌ This command can only be used in a group!");
+            await conn.sendMessage(from, { react: { text: '😇', key: mek.key } });
+            return reply("*YEH COMMAND SIRF GROUPS ME USE KARE 😇* ");
         }
 
-        // 2️⃣ Admin/creator check
+        // Admin/creator check
         if (!isCreator && !isAdmins && !fromMe) {
-            await conn.sendMessage(from, { react: { text: '❌', key: mek.key } });
-            return reply("❌ Only bot owner and group admins can use this command!");
+            await conn.sendMessage(from, { react: { text: '😎', key: mek.key } });
+            return reply("*YEH COMMAND SIRF MERE LIE AUR ADMINS KE LIE HAI 😎*");
         }
 
-        // 3️⃣ Send waiting message
-        const waitMsg = await conn.sendMessage(from, { text: "🔄 Scanning for online members... Please wait 15-20 seconds." }, { quoted: mek });
-        await conn.sendMessage(from, { react: { text: '⏳', key: waitMsg.key } });
+        // Send waiting message
+        const waitMsg = await conn.sendMessage(from, { text: "*ONLINE OFFLINE MEMBERS KI LIST BAN RAHI HAI...😃*" }, { quoted: mek });
+        await conn.sendMessage(from, { react: { text: '😃', key: waitMsg.key } });
 
         const onlineMembers = new Set();
         const groupData = await conn.groupMetadata(from);
 
-        // 4️⃣ Subscribe to presence updates
+        // Subscribe to presence updates
         for (const participant of groupData.participants) {
             conn.presenceSubscribe(participant.id).catch(() => {});
         }
@@ -45,64 +45,24 @@ async (conn, mek, m, { from, isGroup, isAdmins, isCreator, fromMe, reply }) => {
         };
 
         conn.ev.on('presence.update', presenceHandler);
-        await sleep(15000); // Collect online members for 15 sec
+        await sleep(15000); // Wait 15 sec for online collection
         conn.ev.off('presence.update', presenceHandler);
 
-        // 5️⃣ Delete waiting message and react success
+        // Delete waiting message and react
         await conn.sendMessage(from, { react: { text: '☺️', key: waitMsg.key } });
         await conn.sendMessage(from, { delete: waitMsg.key });
 
-        // 6️⃣ Check if nobody online
-        if (onlineMembers.size === 0) {
-            await conn.sendMessage(from, { react: { text: '⚠️', key: mek.key } });
-            return reply("⚠️ Couldn't detect any online members. They might be hiding their presence.");
-        }
+        // Prepare counts only
+        const onlineCount = onlineMembers.size;
+        const offlineCount = groupData.participants.length - onlineCount;
+        const message = `*👑 ONLINE MEMBERS :❯ ❮${onlineCount}❯*\n*👑 OFFLINE MEMBERS :❯ ❮${offlineCount}❯*\n\n*👑 BILAL-MD WHATSAPP BOT 👑*`;
 
-        const onlineArray = Array.from(onlineMembers);
-        let currentText = `*👑 ONLINE MEMBERS :❯ ❮${onlineArray.length}❯*\n*👑 OFFLINE MEMBERS :❯ ❮${groupData.participants.length - onlineArray.length}❯*\n*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*\n`;
-        let mentions = [];
-
-        // 7️⃣ Send empty message first for live updates
-        const msg = await conn.sendMessage(from, { text: currentText }, { quoted: mek });
-
-        // 8️⃣ Add online members line by line with proper tagging
-        for (let i = 0; i < onlineArray.length; i++) {
-            const memberId = onlineArray[i];
-            const memberObj = groupData.participants.find(p => p.id === memberId);
-            const memberName = memberObj?.name || memberId.split('@')[0];
-
-            // Zero-width space ensures WhatsApp treats it as tag
-            const tagText = `@${memberName}\u200B`;
-            currentText += `${i + 1}. ${tagText}\n`;
-
-            mentions.push(memberId); // Add to mentions array
-
-            await sleep(1000); // 1 sec delay for typing effect
-            await conn.relayMessage(from, {
-                protocolMessage: {
-                    key: msg.key,
-                    type: 14,
-                    editedMessage: { conversation: currentText }
-                }
-            }, {});
-        }
-
-        // 9️⃣ Add footer
-        currentText += `\n*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*\n*👑 BILAL-MD WHATSAPP BOT 👑*`;
-        await conn.relayMessage(from, {
-            protocolMessage: {
-                key: msg.key,
-                type: 14,
-                editedMessage: { conversation: currentText }
-            }
-        }, {});
-
-        // 10️⃣ Final message with proper mentions
-        await conn.sendMessage(from, { text: "Online members listed above", mentions });
+        // Send final message
+        await conn.sendMessage(from, { text: message });
 
     } catch (e) {
-        console.error("Error in online command:", e);
-        await conn.sendMessage(from, { react: { text: '❌', key: mek.key } });
+        console.error("*DUBARA KOSHISH KARE 😔*", e);
+        await conn.sendMessage(from, { react: { text: '😔', key: mek.key } });
         reply(`❌ *Error Occurred !!*\n\n${e.message}`);
     }
 });
