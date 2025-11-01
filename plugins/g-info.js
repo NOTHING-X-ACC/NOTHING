@@ -38,8 +38,8 @@ try{
         `*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*\n\t*👑 GROUP INFORMATION 👑*\n*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*`,
         `*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*\n*👑 GROUP NAME 👑*\n${metadata.subject}\n*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*`,
         `*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*\n*👑 GROUP LINK 👑*\n${groupLink}\n*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*`,
-        `*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*\n*👑 MEMBERS :❯ ${metadata.size}*`
-        `*👑 GROUP DESCRIPTION 👑*\n *✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*`
+        `*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*\n*👑 MEMBERS :❯ ${metadata.participants.length}*\n*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*`
+        `*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*\n*👑 GROUP DESCRIPTION 👑*\n *✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*`
     ];
 
     // Start with empty message
