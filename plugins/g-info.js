@@ -36,11 +36,11 @@ try{
     const descLines = (metadata.desc?.toString().split('\n') || ['No description']).map(l => l.trim()).filter(l => l)
     const lines = [
         `*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*\n\t*👑 GROUP INFORMATION 👑*\n*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*`,
-        `*👑 GROUP NAME 👑*\n${metadata.subject}`,
-        `*👑 GROUP LINK 👑*\n${groupLink}`,
+        `*👑 GROUP NAME 👑*\n${metadata.subject}\n*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*`,
+        `*👑 GROUP LINK 👑*\n${groupLink}\n*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*`,
         `*👑 MEMBERS :❯ ${metadata.size}*`,
-        `*👑 CREATOR :❯ ${ownerName}*`,
-        `*👑 GROUP DESCRIPTION 👑*`
+        `*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*`,
+        `*👑 GROUP DESCRIPTION 👑*\n *✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*`
     ];
 
     // Start with empty message
@@ -74,7 +74,7 @@ try{
     }
 
     // Add admins
-    currentText += `\n*👑 GROUP ADMINS 👑*\n${listAdmin}\n\n*👑 BILAL-MD WHATSAPP BOT 👑*`
+    currentText += `*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*\n*👑 GROUP ADMINS 👑*\n${listAdmin}\n\n*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*\n*👑 BILAL-MD WHATSAPP BOT 👑*\n*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*`
     await conn.relayMessage(from, {
         protocolMessage: {
             key: msg.key,
