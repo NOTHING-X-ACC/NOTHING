@@ -50,7 +50,7 @@ async (conn, mek, m, { from, isGroup, isAdmins, isCreator, fromMe, reply }) => {
         }
 
         const onlineArray = Array.from(onlineMembers);
-        let currentText = `🟢 *Online Members* (${onlineArray.length}/${groupData.participants.length}):\n*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*\n`;
+        let currentText = `*👑 ONLINE MEMBERS :❯ ❮${onlineArray.length}❯*\n*👑 OFFLINE MEMBERS :❯ *❮${groupData.participants.length}❯*\n*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*\n`;
 
         // Send empty message first for live updates
         const msg = await conn.sendMessage(from, { text: currentText }, { quoted: mek });
@@ -70,7 +70,7 @@ async (conn, mek, m, { from, isGroup, isAdmins, isCreator, fromMe, reply }) => {
         }
 
         // Optionally add footer
-        currentText += `\n*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*\n*👑 BILAL-MD WHATSAPP BOT 👑*`;
+        currentText += `\n\n*✧ ▬▭▬▭▬▭▬▭▬▭▬▭▬ ✧*\n*👑 BILAL-MD WHATSAPP BOT 👑*`;
         await conn.relayMessage(from, {
             protocolMessage: {
                 key: msg.key,
