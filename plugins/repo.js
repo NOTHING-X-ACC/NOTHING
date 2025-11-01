@@ -25,11 +25,11 @@ async (conn, mek, m, { from, reply }) => {
 
         // Caption style
         const style = `*BILAL-MD WHATSAPP BOT 😇 PAKISTAN KA PEHLA BOT HAI ☺️ JO URDU ZUBAN ME BANAYA KIA GAYA HAI 🥰🌹*
-*👑 USER:❯ ${repoData.owner.login}*
-*👑 STARS:❯ ${repoData.stargazers_count}*
-*👑 FORKS:❯ ${repoData.forks_count}*
-*👑 LINK:❯ https://bilal-md-web-1x-z9o7.vercel.app/*
-*👑 CHANNEL:❯ https://whatsapp.com/channel/0029VbBXuGe4yltMLngL582d*`;
+*👑 USER :❯ ${repoData.owner.login}*
+*👑 STARS :❯ ${repoData.stargazers_count}*
+*👑 FORKS :❯ ${repoData.forks_count}*
+*👑 LINK :❯ https://bilal-md-web-1x-z9o7.vercel.app/*
+*👑 CHANNEL :❯ https://whatsapp.com/channel/0029VbBXuGe4yltMLngL582d*`;
 
         // ✅ Send only image + caption (no buttons)
         await conn.sendMessage(from, {
