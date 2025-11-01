@@ -2,7 +2,7 @@ const { cmd } = require('../command');
 const axios = require('axios');
 
 cmd({
-    pattern: "songkgf",
+    pattern: "songkgf3",
     alias: ["shazam"],
     desc: "Get full song info from SHAZAM-API with fuzzy search",
     react: "🎵",
