@@ -6,38 +6,38 @@ cmd({
     alias: ["setgrouppic", "grouppp"],
     desc: "Change group profile picture (reply image / send image with caption)",
     category: "group",
-    react: "😭",
+    react: "😁",
     filename: __filename
 },
 async (conn, mek, m, { from, isGroup, isBotAdmins, reply, quoted }) => {
     try {
         // ✅ Group check
         if (!isGroup) {
-            await conn.sendMessage(from, { react: { text: "😫", key: m.key } });
+            await conn.sendMessage(from, { react: { text: "😫", key: mek.key } });
             return reply("*YEH COMMAND SIRF GROUPS ME USE KAREIN ☺️❤️*");
         }
 
         // ✅ Bot admin check
         if (!isBotAdmins) {
-            await conn.sendMessage(from, { react: { text: "😎", key: m.key } });
+            await conn.sendMessage(from, { react: { text: "😎", key: mek.key } });
             return reply("*PEHLE MUJHE IS GROUP ME ADMIN BANAO ☺️❤️*");
         }
 
-        let imageBuffer;
+        let imageBuffer = null;
 
         // 1️⃣ Reply image check
-        if (quoted?.message?.imageMessage) {
+        if (quoted?.message && quoted.message.imageMessage) {
             imageBuffer = await getBuffer(quoted);
         }
 
-        // 2️⃣ Direct image with caption
-        else if (m.message?.imageMessage) {
+        // 2️⃣ Direct image with or without caption
+        else if (m.message && m.message.imageMessage) {
             imageBuffer = await getBuffer(m);
         }
 
-        // 3️⃣ If no image found → react & reply
+        // 3️⃣ If no image → react & reply
         if (!imageBuffer) {
-            await conn.sendMessage(from, { react: { text: "❌", key: m.key } });
+            await conn.sendMessage(from, { react: { text: "❌", key: mek.key } });
             return reply("*❌ Please send or reply to an image to set as group profile picture!*");
         }
 
@@ -45,12 +45,12 @@ async (conn, mek, m, { from, isGroup, isBotAdmins, reply, quoted }) => {
         await conn.groupUpdateProfilePicture(from, imageBuffer);
 
         // ✅ Success react & reply
-        await conn.sendMessage(from, { react: { text: "☺️", key: m.key } });
+        await conn.sendMessage(from, { react: { text: "☺️", key: mek.key } });
         return reply("*✅ Group profile picture updated successfully! 🥰*");
 
     } catch (e) {
         console.error("Error in setgpp:", e);
-        await conn.sendMessage(from, { react: { text: "😔", key: m.key } });
+        await conn.sendMessage(from, { react: { text: "😔", key: mek.key } });
         reply("*❌ Koi masla aa gaya! Dubara try karo 🥺*");
     }
 });
