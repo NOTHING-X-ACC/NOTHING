@@ -4,9 +4,9 @@ const { getBuffer } = require('../lib/functions');
 cmd({
     pattern: "setgpp",
     alias: ["setgrouppic", "grouppp"],
-    desc: "Change group profile picture (reply image / send image)",
+    desc: "Change group profile picture (reply image / send image with caption)",
     category: "group",
-    react: "😐",
+    react: "🧁",
     filename: __filename
 },
 async (conn, mek, m, { from, isGroup, isBotAdmins, reply, quoted }) => {
@@ -25,20 +25,14 @@ async (conn, mek, m, { from, isGroup, isBotAdmins, reply, quoted }) => {
 
         let imageBuffer;
 
-        // 1️⃣ Reply image safe check
-        if (quoted && quoted.message && typeof quoted.message === 'object') {
-            const type = Object.keys(quoted.message)[0];
-            if (type === 'imageMessage') {
-                imageBuffer = await getBuffer(quoted);
-            }
+        // 1️⃣ Reply image check
+        if (quoted && quoted.message && typeof quoted.message === 'object' && quoted.message.imageMessage) {
+            imageBuffer = await getBuffer(quoted);
         }
 
-        // 2️⃣ Direct image safe check
-        if (!imageBuffer && m.message && typeof m.message === 'object') {
-            const type = Object.keys(m.message)[0];
-            if (type === 'imageMessage') {
-                imageBuffer = await getBuffer(m);
-            }
+        // 2️⃣ Direct image with caption check
+        if (!imageBuffer && m.message && typeof m.message === 'object' && m.message.imageMessage) {
+            imageBuffer = await getBuffer(m);
         }
 
         // 3️⃣ No image → error
@@ -49,6 +43,8 @@ async (conn, mek, m, { from, isGroup, isBotAdmins, reply, quoted }) => {
 
         // 4️⃣ Update group profile picture
         await conn.groupUpdateProfilePicture(from, imageBuffer);
+
+        // ✅ Success reaction
         await conn.sendMessage(from, { react: { text: '✅', key: mek.key } });
         return reply("✅ Group profile picture updated successfully!");
 
