@@ -4,18 +4,20 @@ const { getBuffer } = require('../lib/functions');
 cmd({
     pattern: "setgpp",
     alias: ["setgrouppic", "grouppp"],
-    desc: "Change group profile picture (reply image / send image / mention user)",
+    desc: "Change group profile picture (reply image / send image)",
     category: "group",
-    react: "😒",
+    react: "🤣",
     filename: __filename
 },
 async (conn, mek, m, { from, isGroup, isBotAdmins, reply, quoted }) => {
     try {
+        // ✅ Group check
         if (!isGroup) {
             await conn.sendMessage(from, { react: { text: '❌', key: mek.key } });
             return reply("❌ This command can only be used in a group!");
         }
 
+        // ✅ Bot admin check
         if (!isBotAdmins) {
             await conn.sendMessage(from, { react: { text: '❌', key: mek.key } });
             return reply("❌ Bot must be an admin to change group profile picture!");
@@ -23,7 +25,7 @@ async (conn, mek, m, { from, isGroup, isBotAdmins, reply, quoted }) => {
 
         let imageBuffer;
 
-        // 1️⃣ Check if user replied to an image
+        // 1️⃣ Reply image check
         if (quoted && quoted.message) {
             const type = Object.keys(quoted.message)[0];
             if (type === 'imageMessage') {
@@ -31,7 +33,7 @@ async (conn, mek, m, { from, isGroup, isBotAdmins, reply, quoted }) => {
             }
         }
 
-        // 2️⃣ Check if user sent image directly
+        // 2️⃣ Direct image check
         if (!imageBuffer && m.message) {
             const type = Object.keys(m.message)[0];
             if (type === 'imageMessage') {
@@ -39,34 +41,13 @@ async (conn, mek, m, { from, isGroup, isBotAdmins, reply, quoted }) => {
             }
         }
 
-        // 3️⃣ Check if user mentioned someone
-        if (!imageBuffer && m.mentionedJid && m.mentionedJid.length > 0) {
-            const mentionedId = m.mentionedJid[0]; // first mentioned user
-
-            // Fetch last 50 messages in the group
-            const messages = await conn.fetchMessages(from, { limit: 50 });
-
-            // Find last image from mentioned user
-            const lastImage = messages.reverse().find(msg => 
-                (msg.key.participant === mentionedId || msg.key.remoteJid === mentionedId) &&
-                msg.message?.imageMessage
-            );
-
-            if (!lastImage) {
-                await conn.sendMessage(from, { react: { text: '❌', key: mek.key } });
-                return reply("❌ Could not find any image from the mentioned user in recent messages.");
-            }
-
-            imageBuffer = await getBuffer(lastImage);
-        }
-
-        // 4️⃣ If no image found, error
+        // 3️⃣ No image found → error
         if (!imageBuffer) {
             await conn.sendMessage(from, { react: { text: '❌', key: mek.key } });
-            return reply("❌ Please send, reply to an image, or mention a user who sent an image recently.");
+            return reply("❌ Please send or reply to an image to set as group profile picture.");
         }
 
-        // 5️⃣ Update group profile picture
+        // 4️⃣ Update group profile picture
         await conn.groupUpdateProfilePicture(from, imageBuffer);
         await conn.sendMessage(from, { react: { text: '✅', key: mek.key } });
         return reply("✅ Group profile picture updated successfully!");
