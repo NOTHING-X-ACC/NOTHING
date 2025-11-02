@@ -6,18 +6,18 @@ cmd({
     alias: ["setgrouppic", "grouppp"],
     desc: "Change group profile picture (reply image / send image)",
     category: "group",
-    react: "🤣",
+    react: "🎉",
     filename: __filename
 },
 async (conn, mek, m, { from, isGroup, isBotAdmins, reply, quoted }) => {
     try {
-        // ✅ Group check
+        // Group check
         if (!isGroup) {
             await conn.sendMessage(from, { react: { text: '❌', key: mek.key } });
             return reply("❌ This command can only be used in a group!");
         }
 
-        // ✅ Bot admin check
+        // Bot admin check
         if (!isBotAdmins) {
             await conn.sendMessage(from, { react: { text: '❌', key: mek.key } });
             return reply("❌ Bot must be an admin to change group profile picture!");
@@ -25,16 +25,16 @@ async (conn, mek, m, { from, isGroup, isBotAdmins, reply, quoted }) => {
 
         let imageBuffer;
 
-        // 1️⃣ Reply image check
-        if (quoted && quoted.message) {
+        // 1️⃣ Reply image check safely
+        if (quoted && quoted.message && typeof quoted.message === 'object') {
             const type = Object.keys(quoted.message)[0];
             if (type === 'imageMessage') {
                 imageBuffer = await getBuffer(quoted);
             }
         }
 
-        // 2️⃣ Direct image check
-        if (!imageBuffer && m.message) {
+        // 2️⃣ Direct image check safely
+        if (!imageBuffer && m.message && typeof m.message === 'object') {
             const type = Object.keys(m.message)[0];
             if (type === 'imageMessage') {
                 imageBuffer = await getBuffer(m);
