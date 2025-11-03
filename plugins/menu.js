@@ -72,6 +72,7 @@ cmd({
 *┃👑│ • GNAME*
 *┃👑│ • LEFT*
 *┃👑│ • JOIN*
+*┃👑│ • SETGPP*
 *╰━━━━━━━━━━━━━━━┈⊷*
 
 *╭━━〔 👑 USER 👑 〕━━┈⊷*
@@ -81,6 +82,9 @@ cmd({
 *┃👑│ • RESTART*
 *┃👑│ • UPDATE*
 *┃👑│ • AUTOBIO*
+*┃👑│ • SETPP*
+*┃👑│ • ANTILINK*
+*┃👑│ • ANTIBOT*
 *╰━━━━━━━━━━━━━━━┈⊷*
 
 *╭━━〔 👑 AI 👑 〕━━┈⊷*
