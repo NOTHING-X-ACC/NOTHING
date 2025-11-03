@@ -46,7 +46,7 @@ async (robin, mek, m, { from, isGroup, isAdmins, isBotAdmins, reply, args }) => 
         // Prevent kicking another admin
         if (groupAdmins.includes(target)) {
             await robin.sendMessage(from, { react: { text: "☹️", key: mek.key } });
-            return reply("*YEH GROUP ME ADMIN HAI 🥺 PEHLE INKO ADMIN KI POST SE DISSMISS KARE ESE \n\n *DEMOTE ❮@ADMIN❯*\n\n *TO WO GROUP SE DISSMISS HO JAYE 🥳 GA PHIR BAD ME LIKHO COMMAND ❮KICK❯ 🥺 TO WO IS GROUP SE REMOVE HO JAYE GA 😍🌹*");
+            return reply("*YEH GROUP ME ADMIN HAI 🥺 PEHLE INKO ADMIN KI POST SE DISSMISS KARE ESE ☺️* \n\n *DEMOTE ❮@ADMIN❯*\n\n *TO WO GROUP SE DISSMISS HO JAYE 🥳 GA PHIR BAD ME LIKHO COMMAND ❮KICK❯ 🥺 TO WO IS GROUP SE REMOVE HO JAYE GA 😍🌹*");
         }
 
         // Prevent removing self
