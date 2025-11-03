@@ -36,7 +36,7 @@ async (robin, mek, m, { from, isGroup, isAdmins, isBotAdmins, reply, args }) => 
             target = args[0].replace(/[^0-9]/g, "") + "@s.whatsapp.net";
         } else {
             await robin.sendMessage(from, { react: { text: "😥", key: mek.key } });
-            return reply("*IS GROUP ME KISI KE MSG KO MENTION KARO 🥺 JIS KO AP NE REMOVE KARNA HAI 😇 PHIR LIKHO COMMAND ❮KICK❯ TO WO MEMBER IS GROUP SE REMOVE HO JAYE GA 😃*\n\n *AUR KISI USER KO TAG KARO ESE ☺️*\n .KICK ❮@SOMEONE❯*\n *TO WO MEMBER IS GROUP SE REMOVE HO JAYE GA 😊🌹*");
+            return reply("*IS GROUP ME KISI KE MSG KO MENTION KARO 🥺 JIS KO AP NE REMOVE KARNA HAI 😇 PHIR LIKHO COMMAND ❮KICK❯ TO WO MEMBER IS GROUP SE REMOVE HO JAYE GA 😃*\n\n *AUR KISI USER KO TAG KARO ESE ☺️*\n *.KICK ❮@SOMEONE❯*\n *TO WO MEMBER IS GROUP SE REMOVE HO JAYE GA 😊🌹*");
         }
 
         // Group metadata check
