@@ -6,7 +6,7 @@ const { downloadContentFromMessage } = require('@whiskeysockets/baileys');
 cmd({
     pattern: "setpp",
     alias: ["setbotpp", "setprofile", "ppbot"],
-    react: "🤳",
+    react: "😇",
     desc: "Change the bot's profile picture (Owner only)",
     category: "owner",
     use: ".setpp (reply to image)",
@@ -14,40 +14,53 @@ cmd({
 },
 async (conn, mek, m, { from, isCreator, reply }) => {
     try {
-        if (!isCreator) return reply("❌ *Only the bot owner can use this command!*");
+        // 🧩 Owner check
+        if (!isCreator) {
+            await conn.sendMessage(from, { react: { text: "😎", key: mek.key } });
+            return reply("*YEH COMMAND SIRF MERE LIE HAI 😎*");
+        }
 
+        // 🖼️ Image check
         const quoted = m.quoted ? m.quoted : m;
         const mime = (quoted.msg || quoted).mimetype || "";
 
         if (!mime || !mime.startsWith("image/")) {
-            return reply("📸 *Reply to an image* or send one with `.setpp` caption.");
+            await conn.sendMessage(from, { react: { text: "🥺", key: mek.key } });
+            return reply("*KISI BHI PHOTO KO MENTION KARO 🥺* \n *AUR PHIR ESE LIKHO ☺️* \n\n *❮SETPP❯* \n\n *JAB AP ESE LIKHO GE ☺️ TO APKI WHATSAPP KI PROFILE PHOTO PER WAHI PHOTO LAG JAYE GE 🥰🌹*");
         }
 
-        // Create tmp directory if not exists
+        // 📂 Temporary folder check/create
         const tmpDir = path.join(process.cwd(), "tmp");
-        if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
+        if (!fs.existsSync(tmpDir)) {
+            fs.mkdirSync(tmpDir, { recursive: true });
+        }
 
-        // Download image data
+        // 💾 Downloading image
+        await conn.sendMessage(from, { react: { text: "⬇️", key: mek.key } });
         const stream = await downloadContentFromMessage(quoted.msg, "image");
         let buffer = Buffer.from([]);
         for await (const chunk of stream) {
             buffer = Buffer.concat([buffer, chunk]);
         }
 
-        // Save image
+        // 🖼️ Save temp image file
         const imagePath = path.join(tmpDir, `botpp_${Date.now()}.jpg`);
         fs.writeFileSync(imagePath, buffer);
 
-        // Update bot profile picture
+        // 🧠 Update bot profile picture
+        await conn.sendMessage(from, { react: { text: "🪄", key: mek.key } });
         await conn.updateProfilePicture(conn.user.id, { url: imagePath });
 
-        // Clean up
+        // 🧹 Clean up temp file
         fs.unlinkSync(imagePath);
 
-        reply("✅ *Bot profile picture updated successfully!*");
+        // ✅ Success message
+        await conn.sendMessage(from, { react: { text: "😍", key: mek.key } });
+        reply("*PROFILE PHOTO CHANGE HO CHUKI HAI 😊❤️*");
 
     } catch (err) {
-        console.error("❌ Error in setpp command:", err);
-        reply("❌ Failed to change bot profile picture. Make sure you reply to a valid image.");
+        console.error("*DUBARA KOSHISH KARE 🥺❤️*", err);
+        await conn.sendMessage(from, { react: { text: "😔", key: mek.key } });
+        reply("*SIRF PHOTO KO MENTION KARO 🥺❤️*");
     }
 });
