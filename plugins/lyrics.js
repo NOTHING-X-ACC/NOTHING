@@ -38,20 +38,16 @@ cmd({
 
     // 🎨 WhiteShadow-MD Style Caption
     const caption = `
-╭─────❮ *🎧 WHITESHADOW LYRICS SYSTEM* ❯─────╮
+*╭─────❮ *👑 BILAL-MD LYRICS 👑* ❯─────╮*
 
-🎵 *Title:* ${title}
-👤 *Artist:* ${artist}
-💿 *Album:* ${album}
-⏱️ *Duration:* ${duration}
-💠 *Requested by:* ${m.pushName}
+*👑 NAME :❯ ${title}*
+*👑 ARTIST :❯ ${artist}
+*👑 ALBUM :❯ ${album}
+*👑 *TIME :❯ ${duration}
 
-📝 *Lyrics:*
-${shortLyrics}
+*👑 LYRICS INFORMATION 👑**
+*${shortLyrics}*
 
-╰────────────────────────────────╯
-🧩 ᴘᴏᴡᴇʀᴇᴅ ʙʏ *WhiteShadow-MD™*
-_Reply with *1* to download full lyrics as TXT file_
 `;
 
     // Send main lyrics message with thumbnail
@@ -92,7 +88,7 @@ _Reply with *1* to download full lyrics as TXT file_
           conn.ev.off('messages.upsert', listener); // remove after done ✅
         }
       } catch (e) {
-        console.log('Lyrics reply handler error:', e);
+        console.log('*DUBARA KOSHISH KARE 🥺:*', e);
       }
     };
 
@@ -101,6 +97,6 @@ _Reply with *1* to download full lyrics as TXT file_
 
   } catch (err) {
     console.error(err);
-    m.reply('⚠️ Error fetching lyrics! Try again later.');
+    m.reply('*LYRICS ERROR*');
   }
 });
