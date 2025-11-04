@@ -55,7 +55,7 @@ async function handleFbDownload(conn, from, mek, url) {
 
 // Command fb2
 cmd({
-  pattern: "fb2",
+  pattern: "fb",
   alias: ["fbb2", "fbvideo2"],
   desc: "Download FB video HD/SD",
   category: "download",
