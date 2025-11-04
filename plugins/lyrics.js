@@ -28,7 +28,7 @@ cmd({
     const duration = song.duration ? `${song.duration}s` : 'N/A';
     const lyrics = song.plainLyrics?.trim() || 'No lyrics found 😢';
 
-    // 🖼 Custom WhiteShadow Thumbnail
+    // 🖼 Custom BILAL Thumbnail
     const thumb = 'https://raw.githubusercontent.com/cnw-db/WHITESHADOW-MD-/refs/heads/main/1762108661488.jpg';
 
     const shortLyrics =
@@ -36,17 +36,17 @@ cmd({
         ? lyrics.substring(0, 900) + '\n\n...(reply *1* to get full lyrics as TXT file)'
         : lyrics;
 
-    // 🎨 WhiteShadow-MD Style Caption
+    // 🎨 -MD Style Caption
     const caption = `
- *👑 BILAL-MD LYRICS 👑* *
+ *👑 BILAL-MD LYRICS 👑*
 
 *👑 NAME :❯ ${title}*
 *👑 ARTIST :❯ ${artist}*
 *👑 ALBUM :❯ ${album}*
-*👑 *TIME :❯ ${duration}*
+*👑 TIME :❯ ${duration}*
 
 *👑 LYRICS INFORMATION 👑*
-*${shortLyrics}*
+${shortLyrics}
 
 `;
 
