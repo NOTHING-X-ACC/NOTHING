@@ -39,7 +39,7 @@ cmd({
     if (!action || (action !== 'on' && action !== 'off')) {
       await conn.sendMessage(from, { react: { text: "🌹", key: m.key } });
       return reply(`*👑 ANTI LINK COMMAND 👑*\n\n` +
-                   `*ABHI ANTILINK ${global.antiLinkStatus[from] ? 'ON' : 'OFF'} HAI 😇\n\n` +
+                   `*ABHI ANTILINK ${global.antiLinkStatus[from] ? 'ON' : 'OFF'} HAI 😇*\n\n` +
                    `*GROUP ME KOI BHI MEMBER AGAR LINK BHEJE GA 🙂 TO USE 3 WARNINGS DE JAYE GE 😇 JAB 3 WORKINGS KHATAM HOGI 😐 WO MEMBER REMOVE HO JAYE GAA 😊*\n *AGAR AP NE ❮ANTI-LINK❯ ON YA OFF KARNA HAI ☺️ TO NICHE METHOD HAI 🥰🌹*\n` +
                    `*• 👑 ANTILINK ON - ❮FOR ACTIVATE❯*\n` +
                    `*• 👑 ANTILINK OFF - ❮FOR CLOSE❯*`);
