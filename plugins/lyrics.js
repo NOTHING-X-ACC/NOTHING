@@ -6,7 +6,7 @@ cmd({
   pattern: 'lyrics',
   alias: ['lyric', 'lirik'],
   react: '😇',
-  desc: 'Get Sinhala or English song lyrics (WhiteShadow-MD Style)',
+  desc: 'Get Sinhala or English song lyrics (BILAL-MD Style)',
   category: 'music',
   use: '.lyrics <song name>'
 }, async (conn, mek, m, { text }) => {
@@ -38,14 +38,14 @@ cmd({
 
     // 🎨 WhiteShadow-MD Style Caption
     const caption = `
-*╭─────❮ *👑 BILAL-MD LYRICS 👑* ❯─────╮*
+ *👑 BILAL-MD LYRICS 👑* *
 
 *👑 NAME :❯ ${title}*
-*👑 ARTIST :❯ ${artist}
-*👑 ALBUM :❯ ${album}
-*👑 *TIME :❯ ${duration}
+*👑 ARTIST :❯ ${artist}*
+*👑 ALBUM :❯ ${album}*
+*👑 *TIME :❯ ${duration}*
 
-*👑 LYRICS INFORMATION 👑**
+*👑 LYRICS INFORMATION 👑*
 *${shortLyrics}*
 
 `;
