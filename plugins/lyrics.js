@@ -5,12 +5,12 @@ const fs = require('fs');
 cmd({
   pattern: 'lyrics',
   alias: ['lyric', 'lirik'],
-  react: '🎵',
+  react: '😇',
   desc: 'Get Sinhala or English song lyrics (WhiteShadow-MD Style)',
   category: 'music',
   use: '.lyrics <song name>'
 }, async (conn, mek, m, { text }) => {
-  if (!text) return m.reply('🎧 *Please provide a song name!*\n\nExample: `.lyrics Lelena`');
+  if (!text) return m.reply('*APKO KISI YOUTUBE VIDEO KI INFORMATION CHAHYE 🤔* \n*TO AP ESE LIKHO ☺️*\n\n*LYRICS ❮VIDEO NAME❯* \n\n*JAB AP ESE LIKHO GE 🙂 TO APKI IS YOUTUBE VIDEO KI ALL INFORMATION 😃 DE JAYE GE 🥰❤️*`');
 
   try {
     const api = `https://api.zenzxz.my.id/api/tools/lirik?title=${encodeURIComponent(text)}`;
@@ -18,7 +18,7 @@ cmd({
     const json = await res.json();
 
     if (!json.success || !json.data?.result?.length) {
-      return m.reply('❌ Lyrics not found. Try another song name!');
+      return m.reply('*IS VIDEO KI INFORMATION NAHI MIL RAHI 🥺 KISI AUR VIDEO KA NAME LIKHO 😇*');
     }
 
     const song = json.data.result[0];
