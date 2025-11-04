@@ -29,7 +29,7 @@ cmd({
     const lyrics = song.plainLyrics?.trim() || 'No lyrics found 😢';
 
     // 🖼 Custom BILAL Thumbnail
-    const thumb = 'https://raw.githubusercontent.com/cnw-db/WHITESHADOW-MD-/refs/heads/main/1762108661488.jpg';
+    const thumb = 'https://github.com/NOTHING-X-ACC/NOTHING/blob/main/plugins/IMG-20251103-WA0102.jpg';
 
     const shortLyrics =
       lyrics.length > 900
