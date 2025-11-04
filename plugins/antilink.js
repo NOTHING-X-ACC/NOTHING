@@ -1,71 +1,68 @@
 const { cmd } = require('../command');
 const config = require("../config");
 
-if (!global.antiLinkStatus) {
-  global.antiLinkStatus = {};
-}
+if (!global.antiLinkStatus) global.antiLinkStatus = {};
+if (!global.warnings) global.warnings = {};
 
 cmd({
   pattern: "antilink",
+  alias: ["alink"],
+  react: "🥺",
   desc: "Enable or disable anti-link protection",
   category: "group",
+  react: "🧩",
   filename: __filename
 }, async (conn, m, store, {
   from,
-  quoted,
-  body,
-  isCmd,
-  command,
   args,
-  q,
+  command,
   isGroup,
-  sender,
-  senderNumber,
-  botNumber2,
-  botNumber,
-  pushname,
-  isMe,
-  isOwner,
-  groupMetadata,
-  groupName,
-  participants,
-  groupAdmins,
-  isBotAdmins,
   isAdmins,
   reply
 }) => {
   try {
-    if (!isGroup) return reply("❌ This command is only for groups!");
-    if (!isAdmins) return reply("❌ Only admins can use this command!");
+    // 🔹 React jab command chale
+    await conn.sendMessage(from, { react: { text: "🥺", key: m.key } });
+
+    if (!isGroup) {
+      await conn.sendMessage(from, { react: { text: "☺️", key: m.key } });
+      return reply("YEH COMMAND SIRF GROUPS ME USE KARE ☺️*");
+    }
+
+    if (!isAdmins) {
+      await conn.sendMessage(from, { react: { text: "😇", key: m.key } });
+      return reply("*YE COMMAND SIRF GROUP ADMINS USE KAR SAKTE HAI 😇 AP ADMIN NAHI HO 🙄*");
+    }
 
     const action = args[0]?.toLowerCase();
 
     if (!action || (action !== 'on' && action !== 'off')) {
-      return reply(`*⚙️ ANTI-LINK SETTINGS*\n\n` +
-                   `*Current Status:* ${global.antiLinkStatus[from] ? '✅ Enabled' : '❌ Disabled'}\n\n` +
-                   `*Usage:*\n` +
-                   `• ${command} on - Enable anti-link\n` +
-                   `• ${command} off - Disable anti-link`);
+      await conn.sendMessage(from, { react: { text: "🌹", key: m.key } });
+      return reply(`*👑 ANTI LINK COMMAND 👑*\n\n` +
+                   `*ABHI ANTILINK ${global.antiLinkStatus[from] ? 'ON' : 'OFF'} HAI 😇\n\n` +
+                   `*GROUP ME KOI BHI MEMBER AGAR LINK BHEJE GA 🙂 TO USE 3 WARNINGS DE JAYE GE 😇 JAB 3 WORKINGS KHATAM HOGI 😐 WO MEMBER REMOVE HO JAYE GAA 😊*\n *AGAR AP NE ❮ANTI-LINK❯ ON YA OFF KARNA HAI ☺️ TO NICHE METHOD HAI 🥰🌹*\n` +
+                   `*• 👑 ANTILINK ON - ❮FOR ACTIVATE❯*\n` +
+                   `*• 👑 ANTILINK OFF - ❮FOR CLOSE❯*`);
     }
 
     if (action === 'on') {
       global.antiLinkStatus[from] = true;
-      await reply(`✅ *ANTI-LINK ACTIVATED*\n\n` +
-                  `Links are now blocked in this group!\n` +
-                  `Users will receive warnings for sending links.`);
+      await conn.sendMessage(from, { react: { text: "🥳", key: m.key } });
+      await reply(`*SUNO ALL MEMBERS 🤨*\n\n*ANTI-LINK AB IS GROUP ME ON KAR DIA GAYA HAI 😃 AB JO KOI BHI IS GROUP ME LINK BHEJE GA 😐 USKO ❮3❯ WARNINGS MILE GE 😒 JESE HI WO ❮3❯ WARNINGS KHATAM HOGI 🙂 WO MEMBER REMOVE HOGA 🙄* \n *SO TAKE CARE ☺️ AB LINK NAA AYE IS GROUP ME 😇*`);
     } else {
       global.antiLinkStatus[from] = false;
-      await reply(`❌ *ANTI-LINK DEACTIVATED*\n\n` +
-                  `Links are now allowed in this group.`);
+      await conn.sendMessage(from, { react: { text: "☹️", key: m.key } });
+      await reply(`*👑 ANTI-LINK NOW OFF 👑* \n\n *SUNO SAB MEMBERS ☺️*\n\n*ANTI-LINK IS GROUP ME OFF KAR DIYA GAYA HAI 😌 AB AP SAB IS GROUP ME LINKS SHARE KAR SAKTE HAI ENJOY 🥳*`);
     }
   } catch (error) {
     console.error("Error in antilink command:", error);
-    reply("❌ An error occurred!");
+    await conn.sendMessage(from, { react: { text: "😔", key: m.key } });
+    reply("DUBARA KOSHSIHS KARE 😔*");
   }
 });
 
 cmd({
-  'on': "body"
+  on: "body"
 }, async (conn, m, store, {
   from,
   body,
@@ -76,17 +73,7 @@ cmd({
   reply
 }) => {
   try {
-    if (!global.warnings) {
-      global.warnings = {};
-    }
-
-    if (!isGroup || isAdmins || !isBotAdmins) {
-      return;
-    }
-
-    if (!global.antiLinkStatus[from]) {
-      return;
-    }
+    if (!isGroup || isAdmins || !isBotAdmins || !global.antiLinkStatus[from]) return;
 
     const linkPatterns = [
       /https?:\/\/chat\.whatsapp\.com\/\S+/gi,
@@ -95,75 +82,67 @@ cmd({
       /(?:https?:\/\/)?t\.me\/\S+/gi,
       /(?:https?:\/\/)?telegram\.me\/\S+/gi,
       /https?:\/\/(?:www\.)?[a-zA-Z0-9-]+\.com\/\S+/gi,
-      /https?:\/\/(?:www\.)?twitter\.com\/\S+/gi,
       /https?:\/\/(?:www\.)?x\.com\/\S+/gi,
-      /https?:\/\/(?:www\.)?linkedin\.com\/\S+/gi,
-      /https?:\/\/channel\.whatsapp\.com\/\S+/gi,
-      /https?:\/\/(?:www\.)?reddit\.com\/\S+/gi,
-      /https?:\/\/(?:www\.)?discord(?:app)?\.com\/\S+/gi,
-      /https?:\/\/(?:www\.)?twitch\.tv\/\S+/gi,
-      /https?:\/\/(?:www\.)?vimeo\.com\/\S+/gi,
-      /https?:\/\/(?:www\.)?dailymotion\.com\/\S+/gi,
-      /https?:\/\/(?:www\.)?medium\.com\/\S+/gi
+      /https?:\/\/channel\.whatsapp\.com\/\S+/gi
     ];
 
-    if (!body || typeof body !== 'string') {
-      return;
-    }
-
+    if (!body || typeof body !== 'string') return;
     const containsLink = linkPatterns.some(pattern => pattern.test(body));
 
-    if (!containsLink) {
-      return;
-    }
+    if (!containsLink) return;
 
-    console.log(`🔗 Link detected from ${sender}: ${body.substring(0, 50)}...`);
+    // 🪄 React jab link detect ho
+    await conn.sendMessage(from, { react: { text: "🤨", key: m.key } });
+    console.log(`*AP  ${sender}: ${body.substring(0, 50)} NE LINK Q BHEJA 🤨*`);
 
     try {
-      await conn.sendMessage(from, {
-        delete: m.key
-      });
-      console.log(`✅ Message deleted: ${m.key.id}`);
+      await conn.sendMessage(from, { delete: m.key });
+      await conn.sendMessage(from, { react: { text: "🥳", key: m.key } });
+      console.log(`LINK DELETED ✅ ${m.key.id}`);
     } catch (deleteError) {
       console.error("❌ Failed to delete message:", deleteError.message);
+      await conn.sendMessage(from, { react: { text: "❌", key: m.key } });
     }
 
     global.warnings[sender] = (global.warnings[sender] || 0) + 1;
     const warningCount = global.warnings[sender];
-
-    console.log(`⚠️ User ${sender} now has ${warningCount} warning(s)`);
+    console.log(`*APKI ${sender} ITNE WARNING ❮${warningCount}❯ HAI 🙂* `);
 
     if (warningCount < 4) {
+      await conn.sendMessage(from, { react: { text: "😎", key: m.key } });
       await conn.sendMessage(from, {
-        text: `*⚠️ LINKS ARE NOT ALLOWED ⚠️*\n\n` +
-              `*╭────⬡ WARNING ⬡────*\n` +
-              `*├▢ USER:* @${sender.split('@')[0]}\n` +
-              `*├▢ WARNING: ${warningCount}/3*\n` +
-              `*├▢ REASON: Link Detected*\n` +
-              `*├▢ ACTION: Message Deleted*\n` +
+        text: `*LINK NAHI BHEJNA 🤨*\n\n` +
+              `*╭────👑 WARNING 👑────*\n` +
+              `*├👑 USER:❯* @${sender.split('@')[0]}\n` +
+              `*├👑 WARNING:❯ ${warningCount}/3*\n` +
+              `*├👑 REASON:❯ LINK FOUNDED*\n` +
+              `*├👑 ACTION:❯ LINK DELETED*\n` +
               `*╰────────────────*\n\n` +
-              `_Next violation will result in removal!_`,
+              `*APKI WARNING JESE KHATAM HOGI 😌 APKO REMOVE KAR DIA JAYE GA 😒*`,
         mentions: [sender]
       });
     } else {
+      await conn.sendMessage(from, { react: { text: "😡", key: m.key } });
       await conn.sendMessage(from, {
-        text: `*🚫 REMOVAL NOTICE 🚫*\n\n` +
-              `@${sender.split('@')[0]} has been removed for exceeding the warning limit (${warningCount}/3).\n\n` +
-              `_Reason: Multiple link violations_`,
+        text: `*👑 MEMBER REMOVED 👑*\n\n` +
+              `*MENE INKO @${sender.split('@')[0]} REMOVE KAR DIA 😒 Q K INKI WARNINGS (${warningCount}/3) KHATAM HO GAYI THY ☺️*\n\n` +
+              `*👑 BILAL-MD WHATSAPP BOT 👑*`,
         mentions: [sender]
       });
-      
+
       try {
         await conn.groupParticipantsUpdate(from, [sender], "remove");
-        console.log(`✅ User ${sender} removed from group`);
+        await conn.sendMessage(from, { react: { text: "😶", key: m.key } });
+        console.log(`*YEH ${sender} MEMBER REMOVE HO GAYA 😶*`);
         delete global.warnings[sender];
       } catch (removeError) {
         console.error("❌ Failed to remove user:", removeError.message);
+        await conn.sendMessage(from, { react: { text: "😓", key: m.key } });
         reply("❌ Failed to remove user. Check bot permissions.");
       }
     }
   } catch (error) {
     console.error("❌ Anti-link error:", error);
-    console.error("Stack trace:", error.stack);
+    await conn.sendMessage(from, { react: { text: "⚠️", key: m.key } });
   }
 });
