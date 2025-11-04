@@ -48,7 +48,7 @@ cmd({
     if (action === 'on') {
       global.antiLinkStatus[from] = true;
       await conn.sendMessage(from, { react: { text: "🥳", key: m.key } });
-      await reply(`*SUNO ALL MEMBERS 🤨*\n\n*ANTI-LINK AB IS GROUP ME ON KAR DIA GAYA HAI 😃 AB JO KOI BHI IS GROUP ME LINK BHEJE GA 😐 USKO ❮3❯ WARNINGS MILE GE 😒 JESE HI WO ❮3❯ WARNINGS KHATAM HOGI 🙂 WO MEMBER REMOVE HOGA 🙄* \n *SO TAKE CARE ☺️ AB LINK NAA AYE IS GROUP ME 😇*`);
+      await reply(`*👑 ANTILINK NOW ON👑*\n\n *SUNO ALL MEMBERS 🤨*\n\n*ANTI-LINK AB IS GROUP ME ON KAR DIA GAYA HAI 😃 AB JO KOI BHI IS GROUP ME LINK BHEJE GA 😐 USKO ❮3❯ WARNINGS MILE GE 😒 JESE HI WO ❮3❯ WARNINGS KHATAM HOGI 🙂 WO MEMBER REMOVE HOGA 🙄* \n *SO TAKE CARE ☺️ AB LINK NAA AYE IS GROUP ME 😇*`);
     } else {
       global.antiLinkStatus[from] = false;
       await conn.sendMessage(from, { react: { text: "☹️", key: m.key } });
