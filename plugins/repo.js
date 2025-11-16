@@ -28,8 +28,16 @@ async (conn, mek, m, { from, reply }) => {
 *👑 USER :❯ ${repoData.owner.login}*
 *👑 STARS :❯ ${repoData.stargazers_count}*
 *👑 FORKS :❯ ${repoData.forks_count}*
-*👑 LINK :❯ https://bilal-md-web-1x-z9o7.vercel.app/*
-*👑 CHANNEL :❯ https://whatsapp.com/channel/0029VbBXuGe4yltMLngL582d*`;
+
+*👑 OWNER INFORMATION 
+*👑 BILAL-MD REPO 👑*
+*https://bilal-md-web-1x-op9u.vercel.app/*
+
+*👑 SUPPORT CHANNEL 👑*
+*https://whatsapp.com/channel/0029VbBXuGe4yltMLngL582d*
+
+*👑SUPPORT GROUP 👑*
+https://chat.whatsapp.com/BwWffeDwiqe6cjDDklYJ5m?mode=hqrt2*`;
 
         // ✅ Send only image + caption (no buttons)
         await conn.sendMessage(from, {
