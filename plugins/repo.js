@@ -24,12 +24,14 @@ async (conn, mek, m, { from, reply }) => {
         const repoData = response.data;
 
         // Caption style
-        const style = `*BILAL-MD WHATSAPP BOT 😇 PAKISTAN KA PEHLA BOT HAI ☺️ JO URDU ZUBAN ME BANAYA KIA GAYA HAI 🥰🌹*
+        const style = `*BILAL-MD WHATSAPP BOT 😇 PAKISTAN KA PEHLA BOT HAI ☺️ JO URDU ZUBAN ME BANAYA KIA GAYA HAI 😊♥️*
 *👑 USER :❯ ${repoData.owner.login}*
 *👑 STARS :❯ ${repoData.stargazers_count}*
 *👑 FORKS :❯ ${repoData.forks_count}*
 
-*👑 OWNER INFORMATION 
+*👑 OWNER INFORMATION 👑*
+*https://akaserein.github.io/Bilal/*
+
 *👑 BILAL-MD REPO 👑*
 *https://bilal-md-web-1x-op9u.vercel.app/*
 
