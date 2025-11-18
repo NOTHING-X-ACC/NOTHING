@@ -1,7 +1,8 @@
 const { cmd } = require('../command');
 const { fetchJson } = require('../lib/functions');
 
-const api = `https://nethu-api-ashy.vercel.app`;
+// New FB API
+const api = `https://facebook-downloader-chamod.vercel.app/api/fb`;
 
 // Facebook link detect
 function extractFacebookLink(text) {
@@ -23,16 +24,17 @@ async function handleFbDownload(conn, from, mek, url) {
     let waitMsg;
     try { waitMsg = await conn.sendMessage(from, { text: "*APKI FACEBOOK KI VIDEO DOWNLOAD HO RAHI HAI....☺️🌹*" }, { quoted: mek }); } catch(e){}
 
-    // fetch video info
-    const fb = await fetchJson(`${api}/download/fbdown?url=${encodeURIComponent(url)}`);
+    // fetch video info using new API
+    const fb = await fetchJson(`${api}?url=${encodeURIComponent(url)}`);
 
-    if (!fb?.result || (!fb.result.hd && !fb.result.sd)) {
+    // fb API ka response structure check karo
+    if (!fb?.url) {
       try { if(waitMsg?.key) await conn.sendMessage(from, { delete: waitMsg.key }); } catch(e){}
       try { await conn.sendMessage(from, { react: { text: "😔", key: mek.key } }); } catch(e){}
       return conn.sendMessage(from, { text: "*APKI FACEBOOK VIDEO NAHI MILI 😔*", quoted: mek });
     }
 
-    const videoUrl = fb.result.hd || fb.result.sd;
+    const videoUrl = fb.url; // chamod API me direct video url
 
     await conn.sendMessage(from, {
       video: { url: videoUrl },
@@ -72,16 +74,14 @@ cmd({
   filename: __filename
 }, async (conn, mek, m) => {
   try {
-    // Extract text from all possible message types
     const body = m.text || m.message?.conversation || m.message?.extendedTextMessage?.text;
     if (!body) return;
 
-    // Ignore commands
     const firstChar = body.trim().charAt(0);
     if ([".", "!", "/", "#"].includes(firstChar)) return;
 
     const fbLink = extractFacebookLink(body);
-    if (!fbLink) return; // not FB
+    if (!fbLink) return;
 
     await handleFbDownload(conn, m.from, mek, fbLink);
 
