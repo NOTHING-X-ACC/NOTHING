@@ -4,8 +4,8 @@ const axios = require('axios');
 const api = "https://facebook-downloader-chamod.vercel.app/api/fb";
 
 cmd({
-    pattern: "fbdc",
-    alias: ["fbvideo"],
+    pattern: "fb",
+    alias: ["fbvideo", "fbv", "fbvi", "fbdownload", "fbdl", "fbvid", "fbvide", "fbvideos"],
     react: "🥺",
     desc: "Download FB video HD/SD",
     category: "download",
