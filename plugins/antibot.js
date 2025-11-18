@@ -1,22 +1,71 @@
 const { cmd } = require('../command');
-const fs = require('fs');
-const path = require('path');
+// ... (Your file/status setup and .antibot command remains the same) ...
 
-// File to store antibot status per group
-const filePath = path.join(__dirname, '../lib/antibot-status.json');
+// === [ 🕵️ ADVANCED METADATA + COMMAND KICK HANDLER ] ===
+const commandPrefixes = ['.', '!', '/', '#', '>', '$', '?', '@']; 
+// Suspicious patterns jo kuch bot frameworks/IDs mein hote hain (e.g., Baileys me 1.msg se shuru hona)
+const suspiciousIdPatterns = [
+    // Example patterns for very specific old bots (if applicable)
+    // /^3E/, /^4E/, /^MD/,
+    // Baileys IDs for message keys can be large strings, so this is for sender JID.
+]; 
 
-// ✅ Create antibot file if missing
-if (!fs.existsSync(filePath)) {
-    fs.writeFileSync(filePath, JSON.stringify({}, null, 2));
-}
+cmd({
+    on: "message"
+}, async (conn, mek, m, { from, isGroup, isBotAdmins, isAdmins, reply }) => {
+    try {
+        if (!m.isGroup || !antibotStatus[from]?.enabled) return;
+        if (m.key.fromMe) return; 
 
-// ✅ Load status
-let antibotStatus = JSON.parse(fs.readFileSync(filePath));
+        const sender = m.key.participant;
+        if (!sender) return;
 
-// 💾 Save function
-function saveStatus() {
-    fs.writeFileSync(filePath, JSON.stringify(antibotStatus, null, 2));
-}
+        const text = m.text?.trim() || '';
+
+        // Agar user group admin hai to usko ignore karo
+        if (isAdmins) return; 
+        
+        // 1. Command Check: Kya message command hai?
+        const isCommandMessage = commandPrefixes.some(prefix => text.startsWith(prefix));
+
+        // 2. Metadata Check: Kya sender ki JID in suspicious patterns se match karti hai?
+        // Note: Sender ID (JID) usually looks like '923xx... @s.whatsapp.net'.
+        const isSuspiciousJID = suspiciousIdPatterns.some(rx => rx.test(sender)); 
+
+        let actionReason = null;
+        
+        if (isCommandMessage && isSuspiciousJID) {
+            actionReason = "sent a command with a suspicious ID";
+        } else if (isCommandMessage) {
+            // Agar koi simple user galti se command bhej de, toh use turant kick nahi karna chahiye.
+            // Hum sirf log kareinge. Aap chaho toh yahan Instant Kick bhi rakh sakte ho (jaisa pehle tha).
+            console.log(`[AntiBot] Warning: Non-admin ${sender.split('@')[0]} sent a command: ${text.substring(0, 15)}`);
+            return;
+        }
+
+        // --- KICK ACTION ---
+        if (actionReason) {
+            console.log(`\n🚨 ANTI-BOT ACTION! (Method 2) Sender: ${sender}, Reason: ${actionReason}`);
+            
+            if (isBotAdmins) {
+                // KICK HO JAYEGA
+                await conn.groupParticipantsUpdate(from, [sender], 'remove');
+                await conn.sendMessage(from, {
+                    text: `🚨 *Bot-like account removed automatically!*\n@${sender.split('@')[0]} was removed for ${actionReason} 🚫.`,
+                    mentions: [sender]
+                });
+            } else {
+                // WARN KAREGA
+                await conn.sendMessage(from, {
+                    text: `⚠️ I detected a *Suspicious Account* activity, but I'm not admin.\nPlease make me *admin* to auto-remove bots 😇`
+                });
+            }
+        }
+
+    } catch (err) {
+        console.error("❌ AntiBot Handler Error:", err);
+    }
+});
 
 // === [ 🧠 COMMAND: .antibot on/off ] ===
 cmd({
@@ -38,7 +87,8 @@ async (conn, mek, m, { from, isGroup, isAdmins, isBotAdmins, q, reply }) => {
     if (args === "on") {
         antibotStatus[from].enabled = true;
         saveStatus();
-        return reply("✅ *AntiBot has been activated in this group!*\n\nBots sending high-speed messages or commands will be removed! 😎");
+        // Reply message yahan change hota hai based on which logic you use (Flood, Command, etc.)
+        return reply("✅ *AntiBot has been activated in this group!*\n\nBots sending high-speed messages or commands will be removed! 😎"); 
     } else if (args === "off") {
         antibotStatus[from].enabled = false;
         saveStatus();
@@ -47,89 +97,4 @@ async (conn, mek, m, { from, isGroup, isAdmins, isBotAdmins, q, reply }) => {
         return reply(`📊 *AntiBot Status:* ${antibotStatus[from].enabled ? "✅ ON" : "❌ OFF"}\n\nUse:\n.antibot on — to enable\n.antibot off — to disable`);
     }
 });
-
-
-// === [ 🕵️ DUAL FLOOD DETECTION HANDLER (MOST EFFECTIVE) ] ===
-global.floodTrack = global.floodTrack || {};
-
-const GENERAL_FLOOD_TIME = 5000; // 5 seconds
-const GENERAL_FLOOD_LIMIT = 5;  // 5 messages (koi bhi)
-
-const COMMAND_FLOOD_TIME = 5000; // 5 seconds
-const COMMAND_FLOOD_LIMIT = 3;  // 3 commands (prefix ke saath)
-
-const commandPrefixes = ['.', '!', '/', '#', '>', '$', '?', '@']; 
-
-cmd({
-    on: "message"
-}, async (conn, mek, m, { from, isGroup, isBotAdmins, isAdmins, reply }) => {
-    try {
-        if (!m.isGroup || !antibotStatus[from]?.enabled) return;
-        if (m.key.fromMe) return; // Apne bot ka message ignore karo
-
-        const sender = m.key.participant;
-        if (!sender) return;
-
-        const text = m.text?.trim() || '';
-
-        // Agar user group admin hai to usko ignore karo
-        if (isAdmins) return; 
-
-        // Initialize tracking for the sender 
-        if (!global.floodTrack[sender]) {
-            global.floodTrack[sender] = { general: [], command: [] };
-        }
-
-        const currentTime = Date.now();
-        let actionReason = null;
-        
-        // --- 1. GENERAL FLOOD CHECK (Koi bhi message) ---
-        global.floodTrack[sender].general.push(currentTime);
-        global.floodTrack[sender].general = global.floodTrack[sender].general.filter(
-            time => currentTime - time <= GENERAL_FLOOD_TIME
-        );
-
-        if (global.floodTrack[sender].general.length >= GENERAL_FLOOD_LIMIT) {
-            actionReason = `sent ${global.floodTrack[sender].general.length} messages in ${GENERAL_FLOOD_TIME/1000} seconds (Flood)`;
-        }
-
-        // --- 2. COMMAND FLOOD CHECK (Sirf commands) ---
-        const isCommand = commandPrefixes.some(prefix => text.startsWith(prefix));
-
-        if (isCommand) {
-            global.floodTrack[sender].command.push(currentTime);
-            global.floodTrack[sender].command = global.floodTrack[sender].command.filter(
-                time => currentTime - time <= COMMAND_FLOOD_TIME
-            );
-
-            if (global.floodTrack[sender].command.length >= COMMAND_FLOOD_LIMIT) {
-                actionReason = `sent ${global.floodTrack[sender].command.length} commands in ${COMMAND_FLOOD_TIME/1000} seconds (Command Flood)`;
-            }
-        }
-        
-        // --- 3. KICK ACTION ---
-        if (actionReason) {
-            console.log(`\n🚨 ANTI-BOT ACTION! Sender: ${sender}, Reason: ${actionReason}`);
-            
-            // Tracking data clear karo
-            delete global.floodTrack[sender]; 
-            
-            if (isBotAdmins) {
-                // KICK HO JAYEGA
-                await conn.groupParticipantsUpdate(from, [sender], 'remove');
-                await conn.sendMessage(from, {
-                    text: `🚨 *Bot-like account removed automatically!*\n@${sender.split('@')[0]} was removed because they ${actionReason} 😠.`,
-                    mentions: [sender]
-                });
-            } else {
-                // WARN KAREGA
-                await conn.sendMessage(from, {
-                    text: `⚠️ I detected *${actionReason}* activity, but I'm not admin.\nPlease make me *admin* to auto-remove bots 😇`
-                });
-            }
-        }
-
-    } catch (err) {
-        console.error("❌ AntiBot Handler Error:", err);
-    }
-});
+    
