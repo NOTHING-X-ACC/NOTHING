@@ -25,7 +25,7 @@ cmd({
         const videos = data.download.videos;
 
         // Caption + HD/SD options
-        let caption = "*APKI FACWBOOK VIDEO MIL GAYI HAI 😃*PEHLE IS MSG KO MENTION KARO 🥺 AUR PHIR AGAR NUMBER ❮1❯ LIKHO GE TO HD VIDEO AYE GE ☺️ AGAR NUMBER ❮2❯ LIKHO GE TO VIDEO LOW QUALITY ME AYE GE 🥰 IS MSG KO MENTION KAR KE FIR NUMBER LIKHO 🥺♥️*\n\n";
+        let caption = "*APKI FACWBOOK VIDEO MIL GAYI HAI 😃PEHLE IS MSG KO MENTION KARO 🥺 AUR PHIR AGAR NUMBER ❮1❯ LIKHO GE TO HD VIDEO AYE GE ☺️ AGAR NUMBER ❮2❯ LIKHO GE TO VIDEO LOW QUALITY ME AYE GE 🥰 IS MSG KO MENTION KAR KE FIR NUMBER LIKHO 🥺♥️*\n\n";
         videos.forEach((v, i) => {
             caption += `\n❮${i+1}❯ ${v.quality}`;
         });
