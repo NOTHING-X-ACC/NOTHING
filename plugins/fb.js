@@ -1,7 +1,7 @@
 const { cmd } = require('../command');
 const { fetchJson } = require('../lib/functions');
 
-const api = `https://facebook-downloader-chamod.vercel.app/api/fb`;
+const api = "https://facebook-downloader-chamod.vercel.app/api/fb";
 
 // Facebook link detect
 function extractFacebookLink(text) {
@@ -11,7 +11,7 @@ function extractFacebookLink(text) {
   return m ? m[0] : null;
 }
 
-// Core FB Download
+// FB download handler
 async function handleFbDownload(conn, from, mek, url) {
   try {
     if (!url) return;
@@ -22,21 +22,36 @@ async function handleFbDownload(conn, from, mek, url) {
 
     const fb = await fetchJson(`${api}?url=${encodeURIComponent(url)}`);
 
-    // Check if API gives direct video link
-    const videoUrl = fb.url || fb.hd_url || fb.sd_url;
-    if (!videoUrl) {
-      try { if(waitMsg?.key) await conn.sendMessage(from, { delete: waitMsg.key }); } catch(e){}
+    if (!fb?.download?.videos || fb.download.videos.length === 0) {
+      if(waitMsg?.key) await conn.sendMessage(from, { delete: waitMsg.key });
       return await conn.sendMessage(from, { text: "*Video nahi mila 😔*", quoted: mek });
     }
 
-    await conn.sendMessage(from, {
-      video: { url: videoUrl },
-      mimetype: "video/mp4",
-      caption: "*👑 BY : BILAL-MD 👑*"
-    }, { quoted: mek });
+    // HD aur SD links
+    let buttons = fb.download.videos.map((v, i) => ({
+      buttonId: `fbdl_${i}`,
+      buttonText: { displayText: v.quality },
+      type: 1
+    }));
 
-    try { await conn.sendMessage(from, { react: { text: "✅", key: mek.key } }); } catch(e){}
+    // Send buttons to choose quality
+    await conn.sendMessage(from, { text: "*Kaunsi quality chahte ho?*", buttons: buttons, headerType: 1 }, { quoted: mek });
+
+    // Handle user button click
+    conn.on('message', async (reply) => {
+      if (!reply.buttonId) return;
+      const index = parseInt(reply.buttonId.split('_')[1]);
+      const video = fb.download.videos[index];
+      if (!video) return;
+      await conn.sendMessage(from, {
+        video: { url: video.link },
+        mimetype: "video/mp4",
+        caption: `*FB Video By: BILAL-MD*\nQuality: ${video.quality}`
+      }, { quoted: mek });
+    });
+
     try { if(waitMsg?.key) await conn.sendMessage(from, { delete: waitMsg.key }); } catch(e){}
+    try { await conn.sendMessage(from, { react: { text: "✅", key: mek.key } }); } catch(e){}
 
   } catch (err) {
     console.error("FB Download Error:", err);
@@ -45,11 +60,11 @@ async function handleFbDownload(conn, from, mek, url) {
   }
 }
 
-// FB Command
+// Command
 cmd({
   pattern: "fb",
   alias: ["fbvideo", "facebook"],
-  desc: "Download Facebook video HD/SD",
+  desc: "Download FB video HD/SD",
   category: "download",
   react: "⏳",
   filename: __filename
@@ -58,7 +73,7 @@ cmd({
   await handleFbDownload(conn, from, mek, q);
 });
 
-// Auto scan for any FB link
+// Auto detect FB links
 cmd({
   on: "message",
   filename: __filename
