@@ -75,6 +75,6 @@ cmd({
 
     } catch (err) {
         console.error("*FB VIDEO DOWNLOAD ERROR*", err);
-        reply("*Kuch gadbad ho gai, video download nahi ho saka 😔*");
+        reply("*FACEBOOK VIDEO NAHI MILI 🥺 DUBARA KOSHISH KATO ☺️*");
     }
 });
