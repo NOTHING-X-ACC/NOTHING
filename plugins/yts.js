@@ -10,7 +10,7 @@ cmd({
     pattern: "yts",
     alias: ["ytsearch"],
     use: '.yts chamod',
-    react: "🥺",
+    react: "☺️",
     desc: "Search and get details from youtube.",
     category: "search",
     filename: __filename
