@@ -1,6 +1,3 @@
-Thos is for your bot 
-
-
 const { cmd } = require('../command');
 const fs = require('fs');
 const path = require('path');
@@ -21,7 +18,7 @@ function saveStatus() {
     fs.writeFileSync(filePath, JSON.stringify(antibotStatus, null, 2));
 }
 
-// 🧠 Command: antibot on/off
+// === [ 🧠 COMMAND: .antibot on/off ] ===
 cmd({
     pattern: "antibot",
     alias: ["botblock", "banbot", "abot", "antbot"],
@@ -41,7 +38,7 @@ async (conn, mek, m, { from, isGroup, isAdmins, isBotAdmins, q, reply }) => {
     if (args === "on") {
         antibotStatus[from].enabled = true;
         saveStatus();
-        return reply("✅ *AntiBot has been activated in this group!*\n\nAny suspicious bot-like users will be removed automatically 😎");
+        return reply("✅ *AntiBot has been activated in this group!*\n\nAny suspicious bot-like users sending commands will be removed immediately 😎");
     } else if (args === "off") {
         antibotStatus[from].enabled = false;
         saveStatus();
@@ -51,42 +48,45 @@ async (conn, mek, m, { from, isGroup, isAdmins, isBotAdmins, q, reply }) => {
     }
 });
 
-// 🕵️ Auto message handler
+
+// === [ 🕵️ INSTANT BOT DETECTION HANDLER ] ===
+// Common command prefixes (koi bhi user agar in se shuru hone wala message bhejega toh suspect hoga)
+const commandPrefixes = ['.', '!', '/', '#', '>', '$', '?', '@']; 
+
 cmd({
     on: "message"
-}, async (conn, mek, m, { from, isBotAdmins }) => {
+}, async (conn, mek, m, { from, isGroup, isBotAdmins, isAdmins, reply }) => {
     try {
         if (!m.isGroup || !antibotStatus[from]?.enabled) return;
-        if (m.key.fromMe) return; // Ignore bot's own messages
+        
+        // Apne bot ka message ignore karo taaki infinite loop na ho
+        if (m.key.fromMe) return; 
 
         const sender = m.key.participant;
         if (!sender) return;
 
-        // 🔍 Patterns used by typical bots (EBO, AEB, MD bots, etc.)
-        const botPatterns = [
-            /^3E/, /^4E/, /^5E/, /^6E/, /^7E/, /^8E/, /^9E/,
-            /^AE/, /^BE/, /^CE/, /^DE/, /^EE/, /^FE/, /^MD/, /^BOT/
-        ];
+        const text = m.text?.trim() || '';
 
-        // 🧩 Check if message id looks bot-like
-        const isBotLike = botPatterns.some(rx => rx.test(m.key.id));
+        // Agar user group admin hai to usko ignore karo
+        if (isAdmins) return; 
+        
+        // Check karo kya message command hai?
+        const isCommandMessage = commandPrefixes.some(prefix => text.startsWith(prefix));
 
-        // 🧮 Message spam counter
-        global.botMsgCount = global.botMsgCount || {};
-        if (!global.botMsgCount[from]) global.botMsgCount[from] = {};
-        global.botMsgCount[from][sender] = (global.botMsgCount[from][sender] || 0) + 1;
-
-        if (isBotLike || global.botMsgCount[from][sender] >= 5) {
+        if (isCommandMessage) {
+            console.log(`🚨 AntiBot: Instant command-based detection triggered for ${sender}.`);
+            
             if (isBotAdmins) {
+                // Kick the user (Turant remove)
                 await conn.groupParticipantsUpdate(from, [sender], 'remove');
                 await conn.sendMessage(from, {
-                    text: `🚨 *Bot-like account removed automatically!*\n@${sender.split('@')[0]} looked suspicious 😐`,
+                    text: `🚨 *Bot-like account removed automatically!*\n@${sender.split('@')[0]} was removed for sending a command immediately 🚫.`,
                     mentions: [sender]
                 });
-                delete global.botMsgCount[from][sender];
             } else {
+                // Warn about admin rights
                 await conn.sendMessage(from, {
-                    text: "⚠️ I detected suspicious bot activity, but I'm not admin.\nPlease make me *admin* to auto-remove bots 😇"
+                    text: "⚠️ I detected a suspicious *command message*, but I'm not admin.\nPlease make me *admin* to auto-remove bots 😇"
                 });
             }
         }
