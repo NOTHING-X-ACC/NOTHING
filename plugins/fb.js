@@ -1,7 +1,6 @@
 const { cmd } = require('../command');
 const { fetchJson } = require('../lib/functions');
 
-// New FB API
 const api = `https://facebook-downloader-chamod.vercel.app/api/fb`;
 
 // Facebook link detect
@@ -12,80 +11,65 @@ function extractFacebookLink(text) {
   return m ? m[0] : null;
 }
 
-// Core download handler
+// Core FB Download
 async function handleFbDownload(conn, from, mek, url) {
   try {
     if (!url) return;
 
-    // react downloading
-    try { await conn.sendMessage(from, { react: { text: "🥺", key: mek.key } }); } catch(e){}
+    try { await conn.sendMessage(from, { react: { text: "⏳", key: mek.key } }); } catch(e){}
 
-    // waiting message
-    let waitMsg;
-    try { waitMsg = await conn.sendMessage(from, { text: "*APKI FACEBOOK KI VIDEO DOWNLOAD HO RAHI HAI....☺️🌹*" }, { quoted: mek }); } catch(e){}
+    let waitMsg = await conn.sendMessage(from, { text: "*APKI FACEBOOK VIDEO DOWNLOAD HO RAHI HAI...*" }, { quoted: mek });
 
-    // fetch video info using new API
     const fb = await fetchJson(`${api}?url=${encodeURIComponent(url)}`);
 
-    // fb API ka response structure check karo
-    if (!fb?.url) {
+    // Check if API gives direct video link
+    const videoUrl = fb.url || fb.hd_url || fb.sd_url;
+    if (!videoUrl) {
       try { if(waitMsg?.key) await conn.sendMessage(from, { delete: waitMsg.key }); } catch(e){}
-      try { await conn.sendMessage(from, { react: { text: "😔", key: mek.key } }); } catch(e){}
-      return conn.sendMessage(from, { text: "*APKI FACEBOOK VIDEO NAHI MILI 😔*", quoted: mek });
+      return await conn.sendMessage(from, { text: "*Video nahi mila 😔*", quoted: mek });
     }
-
-    const videoUrl = fb.url; // chamod API me direct video url
 
     await conn.sendMessage(from, {
       video: { url: videoUrl },
       mimetype: "video/mp4",
-      caption: "*👑 BY :❯ BILAL-MD 👑*"
+      caption: "*👑 BY : BILAL-MD 👑*"
     }, { quoted: mek });
 
-    // success react
-    try { await conn.sendMessage(from, { react: { text: "😍", key: mek.key } }); } catch(e){}
-
-    // delete waiting
+    try { await conn.sendMessage(from, { react: { text: "✅", key: mek.key } }); } catch(e){}
     try { if(waitMsg?.key) await conn.sendMessage(from, { delete: waitMsg.key }); } catch(e){}
 
   } catch (err) {
-    console.error("FB Download error:", err);
-    try { await conn.sendMessage(from, { react: { text: "😔", key: mek.key } }); } catch(e){}
-    try { await conn.sendMessage(from, { text: "*APKI FACEBOOK VIDEO NAHI MILI 😔*", quoted: mek }); } catch(e){}
+    console.error("FB Download Error:", err);
+    try { await conn.sendMessage(from, { react: { text: "❌", key: mek.key } }); } catch(e){}
+    await conn.sendMessage(from, { text: "*Kuch gadbad ho gai, video download nahi ho saka 😔*", quoted: mek });
   }
 }
 
-// Command fb2
+// FB Command
 cmd({
   pattern: "fb",
-  alias: ["fbb2", "fbvideo2"],
-  desc: "Download FB video HD/SD",
+  alias: ["fbvideo", "facebook"],
+  desc: "Download Facebook video HD/SD",
   category: "download",
-  react: "🥺",
+  react: "⏳",
   filename: __filename
 }, async (conn, mek, m, { from, q, reply }) => {
-  if (!q) return reply("*AP KO KOI FACEBOOK VIDEO DOWNLOAD KARNI HAI 🤔* \n *TO AP ESE LIKHO ☺️🌹* \n \n *FB2 ❮APKI FACEBOOK VIDEO KA LINK❯* \n \n*TO APKI FACEBOOK VIDEO DOWNLOAD KAR KE YAHA BHEJ DE JAYE GE 😇💓*");
+  if (!q) return reply("*FB video download karna hai? Link bhejo yahan:* `fb <link>`");
   await handleFbDownload(conn, from, mek, q);
 });
 
-// Auto-scan any incoming text
+// Auto scan for any FB link
 cmd({
   on: "message",
   filename: __filename
 }, async (conn, mek, m) => {
-  try {
-    const body = m.text || m.message?.conversation || m.message?.extendedTextMessage?.text;
-    if (!body) return;
+  const body = m.text || m.message?.conversation || m.message?.extendedTextMessage?.text;
+  if (!body) return;
+  const firstChar = body.trim().charAt(0);
+  if ([".", "!", "/", "#"].includes(firstChar)) return;
 
-    const firstChar = body.trim().charAt(0);
-    if ([".", "!", "/", "#"].includes(firstChar)) return;
+  const fbLink = extractFacebookLink(body);
+  if (!fbLink) return;
 
-    const fbLink = extractFacebookLink(body);
-    if (!fbLink) return;
-
-    await handleFbDownload(conn, m.from, mek, fbLink);
-
-  } catch (err) {
-    console.error("Auto FB scan error:", err);
-  }
+  await handleFbDownload(conn, m.from, mek, fbLink);
 });
