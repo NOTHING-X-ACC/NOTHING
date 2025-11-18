@@ -33,7 +33,7 @@ async (conn, mek, m, { from, reply }) => {
 *https://akaserein.github.io/Bilal/*
 
 *👑 BILAL-MD REPO 👑*
-*https://bilal-md-start.vercel.app/*
+*https://bilal-xmd-start.vercel.app/*
 
 *👑 SUPPORT CHANNEL 👑*
 *https://whatsapp.com/channel/0029VbBXuGe4yltMLngL582d*
