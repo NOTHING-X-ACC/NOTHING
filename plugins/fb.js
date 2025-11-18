@@ -15,6 +15,8 @@ cmd({
 
   try {
     await reply("*Video check kar rahe hai...* ⏳");
+
+    // API call
     const fb = await fetchJson(`${api}?url=${encodeURIComponent(q)}`);
 
     if (!fb?.download?.videos || fb.download.videos.length === 0) {
