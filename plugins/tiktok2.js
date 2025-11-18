@@ -2,7 +2,7 @@ const { cmd } = require('../command');
 const axios = require('axios');
 
 cmd({
-    pattern: "tiktok2",
+    pattern: "tiktok23",
     alias: ["ttdl", "tt", "tiktokdl"],
     desc: "Download TikTok video without watermark",
     category: "downloader",
@@ -15,35 +15,41 @@ async (conn, mek, m, { from, args, q, reply }) => {
         // React command msg 🥺
         await conn.sendMessage(from, { react: { text: "🥺", key: mek.key } });
 
-        if (!q) return reply(
-            "*AGAR AP NE TIKTOK KI VIDEO DOWNLOAD KARNI HAI 🥺💓* \n" +
-            "*TO AP ESE LIKHO 😇♥️* \n\n" +
-            "*TIKTOK ❮APKI TIKTOK VIDEO KA LINK❯* \n\n" +
-            "*AP APNI TIKTOK VIDEO KA LINK COMMAND ❮TIKTOK❯ LIKH KER ☺️* \n" +
-            "*USKE AGE APNI TIKTOK VIDEO KA LINK PASTE KAR DO 😊* \n" +
-            "*TO APKI TIKTOK VIDEO DOWNLOAD KARNE KE BAAD 😍* \n" +
-            "*YAHA BHEJ DE JAYE GE 🥰*"
-        );
+        // Input check
+        if (!q) {
+            return reply(
+                "*AGAR AP NE TIKTOK KI VIDEO DOWNLOAD KARNI HAI 🥺💓* \n" +
+                "*TO AP ESE LIKHO 😇♥️* \n\n" +
+                "*TIKTOK ❮APKI TIKTOK VIDEO KA LINK❯* \n\n" +
+                "*AP APNI TIKTOK VIDEO KA LINK COMMAND ❮TIKTOK❯ LIKH KER ☺️* \n" +
+                "*USKE AGE APNI TIKTOK VIDEO KA LINK PASTE KAR DO 😊* \n" +
+                "*TO APKI TIKTOK VIDEO DOWNLOAD KARNE KE BAAD 😍* \n" +
+                "*YAHA BHEJ DE JAYE GE 🥰*"
+            );
+        }
 
-        if (!q.includes("tiktok.com")) {
+        if (!q.includes("tiktok.com") && !q.includes("vt.tiktok.com")) {
             await conn.sendMessage(from, { react: { text: "😔", key: mek.key } });
-            return reply("*DUBARA KOSHISH KARE 🥺*");
+            return reply("*DUBARA KOSHISH KARE 🥺 LINK Sahi Nahi Hai 😔*");
         }
 
         // Send waiting message
-        waitMsg = await conn.sendMessage(from, { text: "*APKI TIKTOK VIDEO DOWNLOAD HO RAHI HAI ☺️*\n*JAB DOWNLOAD COMPLETE HO JAYE GE TO YAHA BHEJ DE JAYE GE 🥰*" });
+        waitMsg = await conn.sendMessage(from, { text: "*APKI TIKTOK VIDEO DOWNLOAD HO RAHI HAI ☺️*\n*JAB COMPLETE HO JAYE GE TO YAHA BHEJ DE JAYE GE 🥰*" });
 
-        // ✅ Updated API URL
-        const apiUrl = `https://lance-frank-asta.onrender.com/api/downloader?url=${q}`;
+        // 🔥 NEW TikWM API
+        const apiUrl = `https://tikwm.com/api/?url=${encodeURIComponent(q)}`;
         const { data } = await axios.get(apiUrl);
 
-        if (!data || !data.result || !data.result.video) {
+        if (!data || data.code !== 0 || !data.data.play) {
             if (waitMsg) await conn.sendMessage(from, { delete: waitMsg.key });
             await conn.sendMessage(from, { react: { text: "😔", key: mek.key } });
-            return reply("*DUBARA KOSHISH KARE 🥺 API SE DATA NHI MILA 😔*");
+            return reply("*API SE VIDEO LINK NAHI MILA 😭 DUBARA KOSHISH KAREN*");
         }
 
-        const videoUrl = data.result.video; // 👈 API ke response ke hisaab se adjust
+        // No watermark video link
+        const videoUrl = data.data.play;
+
+        // Caption
         const caption = "*👑 BY :❯ BILAL-MD 👑*";
 
         // Send video
@@ -53,16 +59,16 @@ async (conn, mek, m, { from, args, q, reply }) => {
             contextInfo: { mentionedJid: [m.sender] }
         }, { quoted: mek });
 
-        // Delete waiting msg
+        // delete wait msg
         if (waitMsg) await conn.sendMessage(from, { delete: waitMsg.key });
 
-        // React command msg after success ☺️
+        // Success emoji
         await conn.sendMessage(from, { react: { text: "☺️", key: mek.key } });
 
     } catch (e) {
         console.error("TikTok command error:", e);
         if (waitMsg) await conn.sendMessage(from, { delete: waitMsg.key });
         await conn.sendMessage(from, { react: { text: "😔", key: mek.key } });
-        reply("*DUBARA KOSHISH KARE 🥺*");
+        reply("*ERROR AA GAYA 😭 DUBARA TRY KARE*");
     }
 });
