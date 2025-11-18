@@ -4,7 +4,7 @@ const axios = require('axios');
 const api = "https://facebook-downloader-chamod.vercel.app/api/fb";
 
 cmd({
-    pattern: "fbdx",
+    pattern: "fbdc",
     alias: ["fbvideo"],
     react: "🥺",
     desc: "Download FB video HD/SD",
@@ -12,7 +12,7 @@ cmd({
     use: ".fb <link>",
     filename: __filename
 }, async (conn, mek, m, { from, reply, q }) => {
-    if (!q) return reply("*AP KO KOI FACEBOOK VIDEO DOWNLOAD KARNI HAI 🤔*\n*TO LINK BHEJO:* `.fb <link>`");
+    if (!q) return reply("*AP KO KOI FACEBOOK VIDEO DOWNLOAD KARNI HAI 🤔 TO AP US FACEBOOK VIDEO KA LINK COPY KAR LO 😊*\n*AUR PHIR ESE LIKHO ☺️*\n\nFB ❮FACEBOOK VIDEO LINK❯*\n\n*JAB AP ESE LIKHO GE 😃 TO APKI FACEBOOK VIDEO DOWNLOAD KAR KE 😇 YAHA PER BHEJ DE JAYE GE 🥰♥️*");
 
     try {
         const fb = await axios.get(`${api}?url=${encodeURIComponent(q)}`);
@@ -25,11 +25,11 @@ cmd({
         const videos = data.download.videos;
 
         // Caption + HD/SD options
-        let caption = "*FB VIDEO KA LINK MIL GAYA 😇*\n\n*PEHLE IS MSG KO MENTION KARO 🥺 AUR PHIR NUMBER LIKHO:*\n";
+        let caption = "*APKI FACWBOOK VIDEO MIL GAYI HAI 😃*\n*PEHLE IS MSG KO MENTION KARO 🥺 AUR PHIR AGAR NUMBER ❮1❯ LIKHO GE TO HD VIDEO AYE GE ☺️ AGAR NUMBER ❮2❯ LIKHO GE TO VIDEO LOW QUALITY ME AYE GE 🥰 IS MSG KO MENTION KAR KE FIR NUMBER LIKHO 🥺♥️**\n\n";
         videos.forEach((v, i) => {
             caption += `\n❮${i+1}❯ ${v.quality}`;
         });
-        caption += "\n\n*BILAL-MD WHATSAPP BOT*";
+        caption += "\n\n*👑 BILAL-MD WHATSAPP BOT 👑*";
 
         const sentMsg = await conn.sendMessage(from, {
             image: { url: data.metadata.thumbnail },
