@@ -12,7 +12,7 @@ cmd({
 }, async (conn, mek, m, { from, reply }) => {
   try {
     // 🥺 React when command starts
-    await conn.sendMessage(from, { react: { text: '🥺', key: m.key } });
+    await conn.sendMessage(from, { react: { text: '🌹', key: m.key } });
 
     // ⏱️ Initial waiting message
     const msg = await conn.sendMessage(from, {
@@ -27,7 +27,7 @@ cmd({
       const hrs = String(Math.floor(seconds / 3600)).padStart(2, '0');
       const mins = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
       const secs = String(Math.floor(seconds % 60)).padStart(2, '0');
-      return `${hrs}H ${mins}M ${secs}S`;
+      return `${hrs} ${mins} ${secs}`;
     }
 
     // 🔁 Update every second for 30 minutes (1800s)
