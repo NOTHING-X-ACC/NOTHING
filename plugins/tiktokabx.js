@@ -2,7 +2,7 @@ const { cmd } = require('../command');
 const axios = require('axios');
 
 cmd({
-    pattern: "tiktokab",
+    pattern: "tiktokabx",
     alias: ["ttdl", "tt"],
     desc: "Download TikTok video with minimal info",
     category: "downloader",
@@ -11,26 +11,29 @@ cmd({
 },
 async (conn, mek, m, { from, q, reply }) => {
 
-    if (!q) return reply("Yar TikTok ka link do 🙂");
+    if (!q) return reply("AP NE KOI TIKTOK VIDEO DOWNLOAD KARNI HAI 🤔 TO AP US TIKTOK VIDEO KA LINK COPY KAR LO 😇*\n*AUR PHIR ESE LIKHO ☺️*\n\n*TIKTOK ❮ VIDEO LINK ❯* \n *JAB AP ESE LIKHO GE TO APKI TIKTOK VIDEO 😍 DOWNLOAD KAR KE YAHA PER BHEJ DE JAYE GE 🥰♥️*");
 
     try {
-        reply("⏳ Video info fetch kar raha hoon…");
+        reply("*👑 BILAL-MD TIKTOK 👑*");
 
         // API call
         const api = `https://delirius-apiofc.vercel.app/download/tiktok?url=${q}`;
         const { data } = await axios.get(api);
 
-        if (!data.status) return reply("API se video info nahi mili.");
+        if (!data.status) return reply("*APKO TIKTOK VIDEO NAHI MILI 😔*");
 
         const info = data.data;
         const video = info.meta.media[0];
 
         // Minimal Info Caption
         const caption =
-`🎵 TikTok Video
+`*👑 TIKTOK VIDEO INFO 👑*
 
-📄 Title: ${info.title}
-👤 Author: ${info.author.nickname}`;
+*👑 VIDEO NAME 👑*
+${info.title}
+
+*👑 TIKTOK ID NAME 👑* 
+ *👑 ${info.author.nickname} 👑*`;
 
         // Send info first
         await reply(caption);
@@ -40,13 +43,13 @@ async (conn, mek, m, { from, q, reply }) => {
             from,
             {
                 video: { url: video.hd || video.org },
-                caption: "🎥 HD No-Watermark Video"
+                caption: "*👑 BY :❯ BILAL-MD 👑*"
             },
             { quoted: mek }
         );
 
     } catch (err) {
         console.log(err);
-        reply("❌ Video fetch nahi ho rahi, link check karo 🙏");
+        reply("*APKI TIKTOK VIDEO NAHI MILI 😔*");
     }
 });
